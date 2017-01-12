@@ -62,7 +62,7 @@ static NetworkService * sharedSingleton = nil;
 }
 
 - (void)setCallBack {
-    mars::stn::SetCallback(mars::stn::StnCallBack::Instance());
+    mars::stn::SetCallback(mars::stn::StnCallBack::Instance());//hzy: 4.5
     mars::app::SetCallback(mars::app::AppCallBack::Instance());
 }
 

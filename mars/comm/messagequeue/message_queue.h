@@ -184,7 +184,7 @@ MessagePost_t  AsyncInvokePeriod(int64_t _after, int64_t _period, const F& _func
 
 template<class F>
 MessagePost_t  AsyncInvoke(const F& _func, const MessageTitle_t& _title, const MessageHandler_t& _handlerid = DefAsyncInvokeHandler()) {
-    return PostMessage(_handlerid, Message(_title, _func));
+    return PostMessage(_handlerid, Message(_title, _func));//hzy: 3.5
 }
 
 template<class F>

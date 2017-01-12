@@ -281,7 +281,7 @@ void UnInstallMessageHandler(const MessageHandler_t& _handlerid) {
     }
 }
 
-MessagePost_t PostMessage(const MessageHandler_t& _handlerid, const Message& _message, const MessageTiming& _timing) {
+MessagePost_t PostMessage(const MessageHandler_t& _handlerid, const Message& _message, const MessageTiming& _timing) {//hzy: 3.6
     ScopedLock lock(sg_messagequeue_map_mutex);
     const MessageQueue_t& id = _handlerid.queue;
 

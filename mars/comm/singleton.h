@@ -147,7 +147,7 @@ class Singleton {
       public:
         //static boost::shared_ptr<T> instance_shared_ptr;
         
-        static boost::shared_ptr<T>& instance_shared_ptr() {
+        static boost::shared_ptr<T>& instance_shared_ptr() {//hzy: 2.4.2 单例对象指针。。这种方式很诡异啊
             static boost::shared_ptr<T> ptr;
             return ptr;
         }
@@ -187,7 +187,7 @@ class Singleton {
     void Release() { _ReleaseSigleton(const_cast<T*>(SingletonInstance<T>::instance_shared_ptr().get())); }
 
     template<typename T, typename CREATER, typename DESTORYER> static
-    boost::shared_ptr<T> Instance(CREATER _creater, DESTORYER _destoryer) {
+    boost::shared_ptr<T> Instance(CREATER _creater, DESTORYER _destoryer) {//hzy: 2.4.1 单例对象生成
         boost::shared_ptr<T> ret = SingletonInstance<T>::instance_shared_ptr();
 
         if (ret) return ret;

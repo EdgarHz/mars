@@ -70,7 +70,7 @@ class ThreadUtil {
 
 class Thread {
   private:
-    class RunnableReference {
+    class RunnableReference {//hzy: 引用计数，自动释放
       public:
         RunnableReference(Runnable* _target)
             : target(_target), count(0), tid(0), isjoined(false), isended(true)
@@ -124,7 +124,7 @@ class Thread {
     template<class T>
     explicit Thread(const T& op, const char* _thread_name = NULL)
         : runable_ref_(NULL) {
-        runable_ref_ = new RunnableReference(detail::transform(op));
+        runable_ref_ = new RunnableReference(detail::transform(op));//hzy: 1.3, static thread init.
         ScopedSpinLock lock(runable_ref_->splock);
         runable_ref_->AddRef();
 
@@ -160,7 +160,7 @@ class Thread {
 
         ASSERT(runable_ref_->target);
         runable_ref_->isended = false;
-        runable_ref_->AddRef();
+        runable_ref_->AddRef();//hzy: 1.5, reference count++
 
         int ret =  pthread_create(reinterpret_cast<thread_tid*>(&runable_ref_->tid), &attr_, start_routine, runable_ref_);
         ASSERT(0 == ret);
@@ -408,7 +408,7 @@ class Thread {
         init(arg);
         volatile RunnableReference* runableref = static_cast<RunnableReference*>(arg);
         pthread_cleanup_push(&cleanup, arg);
-        runableref->target->run();
+        runableref->target->run();//hzy: 1.6, run.
         pthread_cleanup_pop(1);
         return 0;
     }

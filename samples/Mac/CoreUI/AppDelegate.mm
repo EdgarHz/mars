@@ -34,7 +34,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 
     [NetworkService sharedInstance].delegate = [[NetworkEvent alloc] init];
-    [[NetworkService sharedInstance] setCallBack];
+    [[NetworkService sharedInstance] setCallBack];//hzy: 4.6
     [[NetworkService sharedInstance] setClientVersion:200];
     [[NetworkService sharedInstance] createMars];
     [[NetworkService sharedInstance] setLongLinkAddress:@"localhost" port:8081];

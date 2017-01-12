@@ -54,7 +54,7 @@ std::vector<std::string> StnCallBack::OnNewDns(const std::string& _host) {
 void StnCallBack::OnPush(int32_t _cmdid, const AutoBuffer& _msgpayload) {
 }
 
-bool StnCallBack::Req2Buf(int32_t _taskid, void* const _user_context, AutoBuffer& _outbuffer, int& _error_code, const int _channel_select) {
+bool StnCallBack::Req2Buf(int32_t _taskid, void* const _user_context, AutoBuffer& _outbuffer, int& _error_code, const int _channel_select) { //hzy: 4.4
     NSData* requestData =  [[NetworkService sharedInstance] Request2BufferWithTaskID:_taskid userContext:_user_context];
     if (requestData == nil) {
         requestData = [[NSData alloc] init];

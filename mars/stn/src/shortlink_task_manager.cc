@@ -225,7 +225,7 @@ void ShortLinkTaskManager::__RunOnTimeout() {
     }
 }
 
-void ShortLinkTaskManager::__RunOnStartTask() {
+void ShortLinkTaskManager::__RunOnStartTask() { //hzy: 4.2
     std::list<TaskProfile>::iterator first = lst_cmd_.begin();
     std::list<TaskProfile>::iterator last = lst_cmd_.end();
 
@@ -269,7 +269,7 @@ void ShortLinkTaskManager::__RunOnStartTask() {
         AutoBuffer bufreq;
         int error_code = 0;
 
-        if (!Req2Buf(first->task.taskid, first->task.user_context, bufreq, error_code, Task::kChannelShort)) {
+        if (!Req2Buf(first->task.taskid, first->task.user_context, bufreq, error_code, Task::kChannelShort)) { //hzy: 4.2
             __SingleRespHandle(first, kEctEnDecode, error_code, kTaskFailHandleTaskEnd, 0, first->running_id ? ((ShortLinkInterface*)first->running_id)->Profile() : ConnectProfile());
             first = next;
             continue;

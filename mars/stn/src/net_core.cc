@@ -191,10 +191,10 @@ NetCore::NetCore()
     netsource_timercheck_->fun_time_check_suc_ = boost::bind(&NetCore::__OnTimerCheckSuc, this);
 
 #endif
-
+        //hzy: 5.1 net bind function to deal
     // async
     shortlink_task_manager_->fun_callback_ = boost::bind(&NetCore::__CallBack, this, (int)kCallFromShort, _1, _2, _3, _4, _5);
-
+    
     // sync
     shortlink_task_manager_->fun_notify_session_timeout_ = boost::bind(&NetCore::__OnSessionTimeout, this, _1, _2);
     shortlink_task_manager_->fun_notify_network_err_ = boost::bind(&NetCore::__OnShortLinkNetworkError, this, _1, _2, _3, _4, _5, _6);

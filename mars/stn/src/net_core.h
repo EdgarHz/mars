@@ -57,6 +57,7 @@ class NetCheckLogic;
 class DynamicTimeout;
 class AntiAvalanche;
 
+        //hzy: 5.0 netcore: 接口类，分发至shortlink或longlink
 class NetCore {
   public:
     SINGLETON_INTRUSIVE(NetCore, new NetCore, NetCore::__Release);

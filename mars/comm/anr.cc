@@ -179,11 +179,11 @@ static void __anr_checker_thread() {
     }
 }
 
-static Thread              sg_thread(&__anr_checker_thread);
+static Thread              sg_thread(&__anr_checker_thread);//hzy: 1.2, static thread
 static class startup {
   public:
     startup() {
-        sg_thread.start();
+        sg_thread.start();//hzy: 1.4, static  default run.
     }
 
     ~startup() {
@@ -194,7 +194,7 @@ static class startup {
 
         sg_thread.join();
     }
-} __startup;
+} __startup; //hzy: 1.1, static instance.
 }  // namespace
 
 #endif

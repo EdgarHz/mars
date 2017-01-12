@@ -61,14 +61,38 @@ static const std::string kLibName = "stn";
     {\
     	ret = stn_ptr->func;\
     }
-
+#pragma mark -
+    
+    static void __initbind_baseprjevent() {
+        
+#ifdef ANDROID
+        mars::baseevent::addLoadModule(kLibName);
+#endif
+        //hzy: 2.2. connect signals
+        GetSignalOnCreate().connect(&onCreate);
+        GetSignalOnDestroy().connect(&onDestroy);
+        GetSignalOnSingalCrash().connect(&onSingalCrash);
+        GetSignalOnExceptionCrash().connect(&onExceptionCrash);
+        GetSignalOnNetworkChange().connect(&onNetworkChange);
+        
+#ifndef XLOGGER_TAG
+#error "not define XLOGGER_TAG"
+#endif
+        
+        GetSignalOnNetworkDataChange().connect(&OnNetworkDataChange);
+    }
+    
+BOOT_RUN_STARTUP(__initbind_baseprjevent);//hzy: 2.1 static
+    
+ #pragma mark -
+    
 static void onCreate() {
 #if !UWP && !defined(WIN32)
     signal(SIGPIPE, SIG_IGN);
 #endif
 
     xinfo2(TSF"stn oncreate");
-    SINGLETON_STRONG(ActiveLogic);
+    SINGLETON_STRONG(ActiveLogic);//hzy: 2.3  create ActiveLogic
     NetCore::Singleton::Instance();
 
 }
@@ -108,7 +132,7 @@ static void onNetworkChange() {
 #endif
     STN_WEAK_CALL(OnNetworkChange());
 }
-    
+
 static void OnNetworkDataChange(const char* _tag, ssize_t _send, ssize_t _recv) {
     
     if (NULL == _tag || strnlen(_tag, 1024) == 0) {
@@ -121,32 +145,11 @@ static void OnNetworkDataChange(const char* _tag, ssize_t _send, ssize_t _recv) 
     }
 }
 
-
-static void __initbind_baseprjevent() {
-
-#ifdef ANDROID
-	mars::baseevent::addLoadModule(kLibName);
-#endif
-
-    GetSignalOnCreate().connect(&onCreate);
-    GetSignalOnDestroy().connect(&onDestroy);
-    GetSignalOnSingalCrash().connect(&onSingalCrash);
-    GetSignalOnExceptionCrash().connect(&onExceptionCrash);
-    GetSignalOnNetworkChange().connect(&onNetworkChange);
-    
-#ifndef XLOGGER_TAG
-#error "not define XLOGGER_TAG"
-#endif
-    
-    GetSignalOnNetworkDataChange().connect(&OnNetworkDataChange);
-}
-
-BOOT_RUN_STARTUP(__initbind_baseprjevent);
-    
 void Callback::TrafficData(ssize_t _send, ssize_t _recv) {
     xassert2(false);
 }
     
+#pragma mark -  Callback
 std::vector<std::string> Callback::OnNewDns(const std::string& host) {
     xassert2(false);
     std::vector<std::string> host_info;
@@ -154,9 +157,9 @@ std::vector<std::string> Callback::OnNewDns(const std::string& host) {
 }
 
 void SetCallback(Callback* const callback) {
-	sg_callback = callback;
+	sg_callback = callback;  //hzy: 4.1 callback 
 }
-
+#pragma mark - netcore
 void StartTask (const Task& _task) {
     STN_WEAK_CALL(StartTask(_task));
 }
@@ -194,7 +197,7 @@ bool LongLinkIsConnected(){
     STN_WEAK_CALL_RETURN(LongLinkIsConnected(), connected);
     return connected;
 }
-
+#pragma mark - netsource
 void SetLonglinkSvrAddr(const std::string& host, const std::vector<uint16_t> ports) {
 	SetLonglinkSvrAddr(host, ports, "");
 }
@@ -223,7 +226,7 @@ void SetBackupIPs(const std::string& host, const std::vector<std::string>& iplis
 	NetSource::SetBackupIPs(host, iplist);
 }
 
-
+#pragma mark - signallingKeeper
 void SetSignallingStrategy(long _period, long _keepTime) {
     SignallingKeeper::SetStrategy((unsigned int)_period, (unsigned int)_keepTime);
 }
@@ -239,6 +242,7 @@ void StopSignalling() {
     STN_WEAK_CALL(GetSignallingKeeper().Stop());
 #endif
 }
+#pragma mark -
 
 uint32_t getNoopTaskID() {
 	return Task::kNoopTaskID;
@@ -246,6 +250,7 @@ uint32_t getNoopTaskID() {
 
 void network_export_symbols_0(){}
 
+#pragma mark - callback
 #ifndef ANDROID
 	//callback functions
 	bool MakesureAuthed() {
@@ -271,7 +276,7 @@ void network_export_symbols_0(){}
 		sg_callback->OnPush(cmdid, msgpayload);
 	}
 	//底层获取task要发送的数据
-	bool Req2Buf(int32_t taskid,  void* const user_context, AutoBuffer& outbuffer, int& error_code, const int channel_select) {
+	bool Req2Buf(int32_t taskid,  void* const user_context, AutoBuffer& outbuffer, int& error_code, const int channel_select) { //hzy: 4.3
 		xassert2(sg_callback != NULL);
 		return sg_callback->Req2Buf(taskid, user_context, outbuffer, error_code, channel_select);
 	}

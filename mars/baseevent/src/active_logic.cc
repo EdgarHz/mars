@@ -29,14 +29,14 @@
 #include "mars/comm/messagequeue/message_queue.h"
 
 static void onForeground(bool _isforeground) {
-    SINGLETON_STRONG(ActiveLogic)->OnForeground(_isforeground);
+    SINGLETON_STRONG(ActiveLogic)->OnForeground(_isforeground);//hzy: 3.3
 }
 
 static void __initbind_baseprjevent() {
-    GetSignalOnForeground().connect(&onForeground);
+    GetSignalOnForeground().connect(&onForeground);//hzy: 3.2
 }
 
-BOOT_RUN_STARTUP(__initbind_baseprjevent);
+BOOT_RUN_STARTUP(__initbind_baseprjevent);//hzy: 3.1 bind foreground signal to func.
 
 #ifdef ANDROID
 #define INACTIVE_TIMEOUT (10*60*1000) //ms
@@ -73,7 +73,7 @@ ActiveLogic::~ActiveLogic()
 void ActiveLogic::OnForeground(bool _isforeground)
 {
 	if (MessageQueue::GetDefMessageQueue()!=MessageQueue::CurrentThreadMessageQueue())
-	{
+	{//hzy: 3.4 add signal to message queue.
         MessageQueue::AsyncInvoke(boost::bind(&ActiveLogic::OnForeground, this, _isforeground), (MessageQueue::MessageTitle_t)this, mq::DefAsyncInvokeHandler(mq::GetDefMessageQueue()));
 		return;
 	}
