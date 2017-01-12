@@ -20,12 +20,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import "Main.pb.h"
+#import "Main.pbobjc.h"
 
 #import "UINotifyDelegate.h"
 
 @interface MessageItemsController : UITableViewController<UINotifyDelegate> {
     NSArray<Conversation*> * converSations;
+    ConversationListResponse *convlstResponse;
 }
 
 @end

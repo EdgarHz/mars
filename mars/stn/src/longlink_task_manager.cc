@@ -35,6 +35,7 @@
 #endif
 #include "mars/stn/config.h"
 #include "mars/stn/task_profile.h"
+#include "mars/stn/proto/longlink_packer.h"
 
 #include "dynamic_timeout.h"
 #include "net_channel_factory.h"
@@ -501,14 +502,19 @@ void LongLinkTaskManager::__OnResponse(ErrCmdType _error_type, int _error_code, 
     
     
     if (kEctOK != _error_type) {
+        xwarn2(TSF"task error, taskid:%_, cmdid:%_, error_type:%_, error_code:%_", _taskid, _cmdid, _error_type, _error_code);
         __BatchErrorRespHandle(_error_type, _error_code, kTaskFailHandleDefault, 0, _connect_profile);
+        return;
+    }
+    
+    if (is_push_data(_cmdid, _taskid)) {
         return;
     }
     
     std::list<TaskProfile>::iterator it = __Locate(_taskid);
     
     if (lst_cmd_.end() == it) {
-        xwarn2_if(Task::kInvalidTaskID != _taskid, TSF"task no found task:%0, cmdid:%1, ect:%2, errcode:%3",
+        xwarn2(TSF"task no found task:%0, cmdid:%1, ect:%2, errcode:%3",
                   _taskid, _cmdid, _error_type, _error_code);
         return;
     }
@@ -538,6 +544,7 @@ void LongLinkTaskManager::__OnResponse(ErrCmdType _error_type, int _error_code, 
             break;
         case kTaskFailHandleTaskEnd:
         {
+            xwarn2(TSF"task decode error taskid:%_, cmdid:%_, handle_type:%_", it->task.taskid, it->task.cmdid, handle_type);
             __SingleRespHandle(it, kEctEnDecode, err_code, handle_type, _connect_profile);
         }
             break;

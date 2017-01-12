@@ -57,13 +57,23 @@ class NetCheckLogic;
 class DynamicTimeout;
 class AntiAvalanche;
 
+
         //hzy: 5.0 netcore: 接口类，分发至shortlink或longlink
+
+enum {
+    kCallFromLong,
+    kCallFromShort,
+    kCallFromZombie,
+};
+
+
 class NetCore {
   public:
     SINGLETON_INTRUSIVE(NetCore, new NetCore, NetCore::__Release);
 
   public:
     boost::function<void (Task& _task)> task_process_hook_;
+    boost::function<int (int _from, ErrCmdType _err_type, int _err_code, int _fail_handle, const Task& _task)> task_callback_hook_;
     boost::signals2::signal<void (uint32_t _cmdid, const AutoBuffer& _buffer)> push_preprocess_signal_;
 
   public:
@@ -77,11 +87,11 @@ class NetCore {
     bool    LongLinkIsConnected();
     void    OnNetworkChange();
 
+    void	KeepSignal();
+    void	StopSignal();
+
 #ifdef USE_LONG_LINK
-    SignallingKeeper&    GetSignallingKeeper() {return *signalling_keeper_;}
     LongLinkTaskManager& GetLongLinkTaskManager() {return *longlink_task_manager_;}
-    NetSourceTimerCheck& GetNetSourceTimerCheck() {return *netsource_timercheck_;}
-    ShortLinkTaskManager& GetShortLinkTaskManager() {return *shortlink_task_manager_;}
 #endif
 
   private:

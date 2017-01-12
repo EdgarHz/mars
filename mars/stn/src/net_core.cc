@@ -25,9 +25,12 @@
 #include "boost/bind.hpp"
 #include "boost/ref.hpp"
 
+#include "openssl/export_include/openssl_multi_thread_support.h"
+
 #include "mars/app/app.h"
 #include "mars/baseevent/active_logic.h"
 #include "mars/comm/messagequeue/message_queue.h"
+#include "mars/comm/network/netinfo_util.h"
 #include "mars/comm/socket/local_ipstack.h"
 #include "mars/comm/xlogger/xlogger.h"
 #include "mars/comm/singleton.h"
@@ -35,6 +38,7 @@
 #include "mars/baseevent/baseprjevent.h"
 #include "mars/stn/config.h"
 #include "mars/stn/task_profile.h"
+#include "mars/stn/proto/longlink_packer.h"
 
 #include "net_source.h"
 #include "net_check_logic.h"
@@ -50,8 +54,7 @@
 
 #include "signalling_keeper.h"
 #include "zombie_task_manager.h"
-#include "openssl/export_include/openssl_multi_thread_support.h"
-#include "comm/network/netinfo_util.h"
+
 using namespace mars::stn;
 using namespace mars::app;
 
@@ -98,13 +101,6 @@ inline  static bool __ValidAndInitDefault(Task& _task, XLogger& _group) {
 #define AYNC_HANDLER asyncreg_.Get()
 
 static const int kShortlinkErrTime = 3;
-
-enum {
-    kCallFromLong,
-    kCallFromShort,
-    kCallFromZombie,
-};
-
 
 
 NetCore::NetCore()
@@ -219,8 +215,7 @@ NetCore::~NetCore() {
 #ifdef USE_LONG_LINK
     GetSignalOnNetworkDataChange().disconnect(boost::bind(&SignallingKeeper::OnNetWorkDataChanged, signalling_keeper_, _1, _2, _3));
     
-    longlink_task_manager_->LongLinkChannel().SignalConnection.disconnect(boost::bind(&TimingSync::OnLongLinkStatuChanged, timing_sync_, _1));
-    longlink_task_manager_->LongLinkChannel().SignalConnection.disconnect(boost::bind(&NetCore::__OnLongLinkConnStatusChange, this, _1));
+    longlink_task_manager_->LongLinkChannel().SignalConnection.disconnect_all_slots();
     longlink_task_manager_->LongLinkChannel().broadcast_linkstatus_signal_.disconnect_all_slots();
 
     push_preprocess_signal_.disconnect_all_slots();
@@ -450,6 +445,14 @@ void NetCore::OnNetworkChange() {
    ASYNC_BLOCK_END
 }
 
+void NetCore::KeepSignal() {
+	signalling_keeper_->Keep();
+}
+
+void NetCore::StopSignal() {
+	signalling_keeper_->Stop();
+}
+
 #ifdef USE_LONG_LINK
 #ifdef __APPLE__
 void NetCore::__ResetLongLink() {
@@ -496,6 +499,12 @@ bool NetCore::LongLinkIsConnected() {
 }
 
 int NetCore::__CallBack(int _from, ErrCmdType _err_type, int _err_code, int _fail_handle, const Task& _task, unsigned int _taskcosttime) {
+
+	if (task_callback_hook_ && 0 == task_callback_hook_(_from, _err_type, _err_code, _fail_handle, _task)) {
+		xwarn2(TSF"task_callback_hook let task return. taskid:%_, cgi%_.", _task.taskid, _task.cgi);
+		return 0;
+	}
+
     if (kEctOK == _err_type || kTaskFailHandleTaskEnd == _fail_handle)
     	return OnTaskEnd(_task.taskid, _task.user_context, _err_type, _err_code);
 
@@ -528,9 +537,9 @@ void NetCore::__OnShortLinkResponse(int _status_code) {
 #ifdef USE_LONG_LINK
 
 void NetCore::__OnPush(uint32_t _cmdid, uint32_t _taskid, const AutoBuffer& _buf) {
-    xinfo2_if(0 == _taskid, TSF"task push seq:%_, cmdid:%_, len:%_", _taskid, _cmdid, _buf.Length());
-    
-    if (_taskid == Task::kInvalidTaskID) {
+
+    if (is_push_data(_cmdid, _taskid)) {
+        xinfo2(TSF"task push seq:%_, cmdid:%_, len:%_", _taskid, _cmdid, _buf.Length());
         push_preprocess_signal_(_cmdid, _buf);
         OnPush(_cmdid, _buf);
     }
