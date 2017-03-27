@@ -129,7 +129,7 @@ class LongLinkConnectObserver : public MComplexConnect {
 LongLink::LongLink(NetSource& _netsource, MessageQueue::MessageQueue_t _messagequeueid)
     : asyncreg_(MessageQueue::InstallAsyncHandler(_messagequeueid))
     , netsource_(_netsource)
-    , thread_(boost::bind(&LongLink::__Run, this), XLOGGER_TAG "::lonklink")
+    , thread_(boost::bind(&LongLink::__Run, this), XLOGGER_TAG "::lonklink")//hzy: 1.4.1
 #ifdef ANDROID
     , smartheartbeat_(new SmartHeartbeat)
 #else
@@ -340,7 +340,7 @@ void LongLink::__OnAlarm() {
 #endif
 }
 
-void LongLink::__Run() {
+void LongLink::__Run() {//hzy: 1.4.1
     // sync to MakeSureConnected data reset
     {
         ScopedLock lock(mutex_);

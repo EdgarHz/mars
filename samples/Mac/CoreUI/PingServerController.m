@@ -40,8 +40,9 @@
 }
 
 - (IBAction)onButtonClick:(id)sender {
+    //hzy: 4.0  完整的消息流程
     CGITask *helloCGI = [[CGITask alloc] initAll:ChannelType_All AndCmdId:kSayHello AndCGIUri:@"/mars/hello" AndHost:@"www.marsopen.cn"];
-    [[NetworkService sharedInstance] startTask:helloCGI ForUI:self];
+    [[NetworkService sharedInstance] startTask:helloCGI ForUI:self];//hzy: 4.1
 }
 
 - (NSData*)requestSendData {
@@ -60,7 +61,8 @@
 }
 
 - (int)onTaskEnd:(uint32_t)tid errType:(uint32_t)errtype errCode:(uint32_t)errcode {
-    
+
+    //hzy: 4.26
     return 0;
 }
 

@@ -480,7 +480,7 @@ void PingQuery::proc_v4(char* _ptr, ssize_t _len, struct msghdr* _msg, struct ti
              icmplen, Sock_ntop_host(&recvaddr_, sizeof(recvaddr_)),
              ntohs(icmp->icmp_seq), rtt);
     xinfo2(TSF"%_", (char*)tempbuff);
-    pingresult_.append(tempbuff);
+    pingresult_.append(tempbuff);//hzy sdt: 4.11
     //   }
 }
 
@@ -511,7 +511,7 @@ int PingQuery::__prepareSendAddr(const char* _dest) {
 int PingQuery::__initialize(const char* _dest) {
     if (-1 == __prepareSendAddr(_dest)) return -1;;
 
-    sockfd_ = Socket(sendaddr_.sa_family, SOCK_DGRAM/*SOCK_RAW*/, IPPROTO_ICMP);
+    sockfd_ = Socket(sendaddr_.sa_family, SOCK_DGRAM/*SOCK_RAW*/, IPPROTO_ICMP); //hzy sdt: 4.3 icmp协议
 
     if (sockfd_ < 0) return -1;
 
@@ -577,15 +577,15 @@ int PingQuery::__recv() {
     xdebug2(TSF"gettimeofday sec=%0,usec=%1", tval.tv_sec, tval.tv_usec);
 
     proc_v4(recvbuf + IP_HEADER_LEN, n, &msg, &tval);  // 杩欎釜闀垮害n锛屽寘鍚�20涓瓧鑺傜殑ip澶�
-
+    //hzy sdt: 4.10
     return n;
 }
 
-int PingQuery::__send() {
+int PingQuery::__send() {//hzy sdt: 4.6
     char sendbuffer[MAXBUFSIZE];
     memset(sendbuffer, 0, MAXBUFSIZE);
     int len = 0;
-    __preparePacket(sendbuffer, len);
+    __preparePacket(sendbuffer, len);//hzy sdt: 4.7
 
     if (NULL != traffic_monitor_) {
         if (traffic_monitor_->sendLimitCheck(len)) {
@@ -599,7 +599,7 @@ int PingQuery::__send() {
 
     return sendLen;
 }
-
+//hzy sdt: 4.8
 void PingQuery::__preparePacket(char* _sendbuffer, int& _len) {
     char    sendbuf[MAXBUFSIZE];
     memset(sendbuf, 0, MAXBUFSIZE);
@@ -677,7 +677,7 @@ int PingQuery::__runReadWrite(int& _errcode) {
         }
 
         if (sel.Write_FD_ISSET(sockfd_) && should_send) {
-            int sendLen = __send();
+            int sendLen = __send(); //hzy sdt: 4.5
 
             if (TRAFFIC_LIMIT_RET_CODE == sendLen) {
                 return TRAFFIC_LIMIT_RET_CODE;
@@ -691,7 +691,7 @@ int PingQuery::__runReadWrite(int& _errcode) {
         }
 
         if (sel.Read_FD_ISSET(sockfd_) && readcount_ > 0) {
-            if (TRAFFIC_LIMIT_RET_CODE == __recv()) {
+            if (TRAFFIC_LIMIT_RET_CODE == __recv()) {  //hzy sdt: 4.9
                 readcount_--;
                 return TRAFFIC_LIMIT_RET_CODE;
             }
@@ -702,7 +702,7 @@ int PingQuery::__runReadWrite(int& _errcode) {
 
     return 0;
 }
-
+//hzy sdt: 4.1
 int PingQuery::RunPingQuery(int _querycount, int _interval/*S*/, int _timeout/*S*/, const char* _dest, unsigned int _packet_size) {
     xassert2(_querycount >= 0);
     xdebug2(TSF"dest=%0", _dest);
@@ -744,19 +744,19 @@ int PingQuery::RunPingQuery(int _querycount, int _interval/*S*/, int _timeout/*S
     interval_ = _interval;
     timeout_  = _timeout;
 
-    if (-1 == __initialize(_dest)) {
+    if (-1 == __initialize(_dest)) { //hzy sdt: 4.2  初始化socket连接
         __deinitialize();
         return -1;
     }
 
     int errcode;
-    int ret = __runReadWrite(errcode);
+    int ret = __runReadWrite(errcode);//hzy sdt: 4.4
     __deinitialize();
 
     //  if(0 >= m_vecRTTs.size())  return -1;
     return ret;
 }
-
+//hzy sdt: 4.12
 int PingQuery::GetPingStatus(struct PingStatus& _ping_status) {
     clearPingStatus(_ping_status);
     int size = (int)vecrtts_.size();

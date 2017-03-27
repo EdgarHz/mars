@@ -25,8 +25,8 @@ namespace detail {
 template <class T>
 class RunnableFunctor : public Runnable {
   public:
-    RunnableFunctor(const T& f) : func_(f) {}
-    virtual void run() { func_(); }
+    RunnableFunctor(const T& f) : func_(f) {} //hzy: 1.0.6
+    virtual void run() { func_(); }//hzy: 1.1.7
   private:
     T func_;
 };
@@ -68,13 +68,13 @@ class RunnableFunctor<Runnable*> : public Runnable {
 template <class T>
 struct TransformImplement {
     static Runnable* transform(const T& t) {
-        return new RunnableFunctor<T>(t);
+        return new RunnableFunctor<T>(t);//hzy: 1.0.5
     }
 };
 
 template <class T>
-inline Runnable* transform(const T& t) {
-    return TransformImplement<T>::transform(t);
+inline Runnable* transform(const T& t) {//hzy: 1.0.3
+    return TransformImplement<T>::transform(t);//hzy: 1.0.4
 }
 
 }  // namespace detail

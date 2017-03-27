@@ -56,7 +56,7 @@ void DnsChecker::__DoCheck(CheckRequestProfile& _check_request) {
 		profile.domain_name = iter->first;
 		profile.netcheck_type = kDnsCheck;
 		profile.network_type = ::getNetInfo();
-
+        //hzy sdt: 6.0 dnschecker 使用的是自定义的socket_gethostbyname方法
 		struct socket_ipinfo_t ipinfo;
 		int timeout = (_check_request.total_timeout == UNUSE_TIMEOUT ? DEFAULT_DNS_TIMEOUT : _check_request.total_timeout);
         uint64_t start_time = gettickcount();

@@ -85,8 +85,8 @@
     return returnType;
 }
 
-- (NSInteger)OnTaskEndWithTaskID:(uint32_t)tid task:(CGITask *)task errType:(uint32_t)errtype errCode:(uint32_t)errcode {
-    
+- (NSInteger)OnTaskEndWithTaskID:(uint32_t)tid task:(CGITask *)task errType:(uint32_t)errtype errCode:(uint32_t)errcode {//hzy: 4.26
+
     NSString *taskIdKey = [NSString stringWithFormat:@"%d", tid];
     
     [tasks removeObjectForKey:taskIdKey];

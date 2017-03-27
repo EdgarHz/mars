@@ -118,7 +118,7 @@ void NetCheckLogic::UpdateLongLinkInfo(unsigned int _continues_fail_count, bool 
 	xdebug2("shortlink:_continueFailCount=%d, _isTaskSucc=%d, records=0x%x", _continues_fail_count, _task_succ, longlink_taskstatus_item_.records);
 
     if (__ShouldNetCheck()) {
-        __StartNetCheck();
+        __StartNetCheck();//hzy sdt: 2.x
     }
 }
 
@@ -128,8 +128,8 @@ void NetCheckLogic::UpdateShortLinkInfo(unsigned int _continues_fail_count, bool
 	SET_BIT(_task_succ, shortlink_taskstatus_item_.records, kValidBitsFilter);
 	xdebug2("shortlink:_continues_fail_count: %d, _task_succ: %d, records=0x%x", _continues_fail_count, _task_succ, shortlink_taskstatus_item_.records);
 
-    if (__ShouldNetCheck()) {
-        __StartNetCheck();
+    if (1 || __ShouldNetCheck()) {
+        __StartNetCheck();//hzy sdt: 2.x
     }
 }
 
@@ -205,7 +205,7 @@ bool NetCheckLogic::__ShouldNetCheck() {
     return ret;
 }
 
-void NetCheckLogic::__StartNetCheck() {
+void NetCheckLogic::__StartNetCheck() {//hzy sdt: 2.x
 
 	//get longlink check map
 	CheckIPPorts longlink_check_items;
@@ -274,5 +274,5 @@ void NetCheckLogic::__StartNetCheck() {
 
 
     int mode = (NET_CHECK_BASIC | NET_CHECK_LONG | NET_CHECK_SHORT);
-    if (!longlink_check_items.empty() || !shortlink_check_items.empty()) StartActiveCheck(longlink_check_items, shortlink_check_items, mode, UNUSE_TIMEOUT);
+    if (!longlink_check_items.empty() || !shortlink_check_items.empty()) StartActiveCheck(longlink_check_items, shortlink_check_items, mode, UNUSE_TIMEOUT); //hzy sdt: 2.x
 }

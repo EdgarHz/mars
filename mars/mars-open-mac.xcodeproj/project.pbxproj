@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44E9456D1E31AD7D0008CE7A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 44E9456C1E31AD7D0008CE7A /* libz.tbd */; };
 		4BE038E01DE7ECA40004CD84 /* CoreWLAN.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE038DF1DE7ECA40004CD84 /* CoreWLAN.framework */; };
 		4BE038E21DE7ECC30004CD84 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE038E11DE7ECC30004CD84 /* CoreFoundation.framework */; };
 		4BE038E41DE7ECD20004CD84 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE038E31DE7ECD20004CD84 /* CFNetwork.framework */; };
@@ -129,6 +130,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		44E9456C1E31AD7D0008CE7A /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		4BB7124F1DE811B100185734 /* libmars.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmars.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BE038DF1DE7ECA40004CD84 /* CoreWLAN.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreWLAN.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/CoreWLAN.framework; sourceTree = DEVELOPER_DIR; };
 		4BE038E11DE7ECC30004CD84 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -150,6 +152,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44E9456D1E31AD7D0008CE7A /* libz.tbd in Frameworks */,
 				4BE038EA1DE7ED490004CD84 /* Foundation.framework in Frameworks */,
 				4BE038E81DE7ED3A0004CD84 /* SystemConfiguration.framework in Frameworks */,
 				4BE038E61DE7ED1E0004CD84 /* NetworkExtension.framework in Frameworks */,
@@ -180,6 +183,7 @@
 		4BE038DE1DE7ECA40004CD84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				44E9456C1E31AD7D0008CE7A /* libz.tbd */,
 				4BE038E91DE7ED490004CD84 /* Foundation.framework */,
 				4BE038E71DE7ED3A0004CD84 /* SystemConfiguration.framework */,
 				4BE038E51DE7ED1E0004CD84 /* NetworkExtension.framework */,

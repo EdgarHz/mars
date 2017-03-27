@@ -80,7 +80,7 @@ LongLinkSpeedTestItem::LongLinkSpeedTestItem(const std::string& _ip, uint16_t _p
     bzero(&_addr, sizeof(_addr));
     _addr = *(struct sockaddr_in*)(&socket_address(ip_.c_str(), port_).address());
 
-    before_connect_time_ = gettickcount();
+    before_connect_time_ = gettickcount(); //hzy:speedtest
 
     ::connect(socket_, (sockaddr*)&_addr, sizeof(_addr));
 }
@@ -101,7 +101,7 @@ void LongLinkSpeedTestItem::HandleFDISSet(SocketSelect& _sel) {
         state_ = kLongLinkSpeedTestFail;
     } else if (_sel.Write_FD_ISSET(socket_)) {
         if (kLongLinkSpeedTestConnecting == state_) {
-            after_connect_time_ = gettickcount();
+            after_connect_time_ = gettickcount();//hzy: speedtest
         }
 
         state_ = __HandleSpeedTestReq();
@@ -172,7 +172,7 @@ int LongLinkSpeedTestItem::__HandleSpeedTestReq() {
         req_ab_.Seek(nwrite, AutoBuffer::ESeekCur);
 
         if (req_ab_.Length() - req_ab_.Pos() <= 0) {
-            return  kLongLinkSpeedTestResp;
+            return kLongLinkSpeedTestResp;
         } else {
             return kLongLinkSpeedTestReq;
         }
@@ -225,7 +225,7 @@ int LongLinkSpeedTestItem::__HandleSpeedTestResp() {
 }
 
 ////////////////////////////////////////////////////////////////
-
+#pragma mark -
 LongLinkSpeedTest::LongLinkSpeedTest(const boost::shared_ptr<NetSource>& _netsource): netsource_(_netsource)
     , selector_(breaker_) {
     if (!breaker_.IsCreateSuc()) {
@@ -261,7 +261,7 @@ bool LongLinkSpeedTest::GetFastestSocket(int& _fdSocket, std::string& _strIp, un
         selector_.PreSelect();
 
         for (std::vector<LongLinkSpeedTestItem*>::iterator iter = speedTestItemVec.begin(); iter != speedTestItemVec.end(); ++iter) {
-            (*iter)->HandleSetFD(selector_);
+            (*iter)->HandleSetFD(selector_);//hzy: !!
         }
 
         int selectRet = selector_.Select(kTimeout);
@@ -295,8 +295,8 @@ bool LongLinkSpeedTest::GetFastestSocket(int& _fdSocket, std::string& _strIp, un
         size_t count = 0;
 
         for (std::vector<LongLinkSpeedTestItem*>::iterator iter = speedTestItemVec.begin(); iter != speedTestItemVec.end(); ++iter) {
+            
             (*iter)->HandleFDISSet(selector_);
-
             if (kLongLinkSpeedTestSuc == (*iter)->GetState()) {
                 loopShouldBeStop = true;
                 break;

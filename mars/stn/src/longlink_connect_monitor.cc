@@ -164,7 +164,7 @@ unsigned long LongLinkConnectMonitor::__IntervalConnect(int _type) {
 
     if (posttime >= interval) {
         bool newone = false;
-        bool ret = longlink_.MakeSureConnected(&newone);
+        bool ret = longlink_.MakeSureConnected(&newone);//hzy: 未链接则重新链接
         xinfo2(TSF"made interval connect interval:%0, posttime:%_, newone:%_, connectstatus:%_", interval, posttime, newone, longlink_.ConnectStatus());
         return (ret || newone) ? 0 : 0;
 
@@ -180,7 +180,7 @@ unsigned long  LongLinkConnectMonitor::__AutoIntervalConnect() {
     if (0 == remain) return remain;
 
     xinfo2(TSF"start auto connect after:%0", remain);
-    alarm_.Start((int)remain);
+    alarm_.Start((int)remain); //hzy: 消息队列，延时调用
     return remain;
 }
 

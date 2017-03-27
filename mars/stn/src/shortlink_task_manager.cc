@@ -68,7 +68,7 @@ ShortLinkTaskManager::~ShortLinkTaskManager() {
 #endif
 }
 
-bool ShortLinkTaskManager::StartTask(const Task& _task) {
+bool ShortLinkTaskManager::StartTask(const Task& _task) {//hzy: 4.3
     xverbose_function();
 
     if (_task.send_only) {
@@ -85,7 +85,7 @@ bool ShortLinkTaskManager::StartTask(const Task& _task) {
     lst_cmd_.push_back(task);
     lst_cmd_.sort(__CompareTask);
 
-    __RunLoop();
+    __RunLoop();//hzy: 4.4
     return true;
 }
 
@@ -148,7 +148,7 @@ void ShortLinkTaskManager::OnSessionTimeout(int _err_code, uint32_t _src_taskid)
     __RunLoop(); 
 }
 
-void ShortLinkTaskManager::__RunLoop() {
+void ShortLinkTaskManager::__RunLoop() {//hzy: 4.4
     if (lst_cmd_.empty()) {
 #ifdef ANDROID
         /*cancel the last wakeuplock*/
@@ -158,7 +158,7 @@ void ShortLinkTaskManager::__RunLoop() {
     }
 
     __RunOnTimeout();
-    __RunOnStartTask();
+    __RunOnStartTask();//hzy: 4.5
 
     if (!lst_cmd_.empty()) {
 #ifdef ANDROID
@@ -175,7 +175,7 @@ void ShortLinkTaskManager::__RunLoop() {
     }
 }
 
-void ShortLinkTaskManager::__RunOnTimeout() {
+void ShortLinkTaskManager::__RunOnTimeout() {//hzy sdt: 2.x
     xverbose2(TSF"lst_cmd_ size=%0", lst_cmd_.size());
     std::list<TaskProfile>::iterator first = lst_cmd_.begin();
     std::list<TaskProfile>::iterator last = lst_cmd_.end();
@@ -225,7 +225,7 @@ void ShortLinkTaskManager::__RunOnTimeout() {
     }
 }
 
-void ShortLinkTaskManager::__RunOnStartTask() { //hzy: 4.2
+void ShortLinkTaskManager::__RunOnStartTask() { //hzy: 4.5
     std::list<TaskProfile>::iterator first = lst_cmd_.begin();
     std::list<TaskProfile>::iterator last = lst_cmd_.end();
 
@@ -269,8 +269,8 @@ void ShortLinkTaskManager::__RunOnStartTask() { //hzy: 4.2
         AutoBuffer bufreq;
         int error_code = 0;
 
-        if (!Req2Buf(first->task.taskid, first->task.user_context, bufreq, error_code, Task::kChannelShort)) { //hzy: 4.2
-            __SingleRespHandle(first, kEctEnDecode, error_code, kTaskFailHandleTaskEnd, 0, first->running_id ? ((ShortLinkInterface*)first->running_id)->Profile() : ConnectProfile());
+        if (!Req2Buf(first->task.taskid, first->task.user_context, bufreq, error_code, Task::kChannelShort)) { //hzy: 4.6
+            __SingleRespHandle(first, kEctEnDecode, error_code, kTaskFailHandleTaskEnd, 0, first->running_id ? ((ShortLinkInterface*)first->running_id)->Profile() : ConnectProfile());//hzy: 4.20
             first = next;
             continue;
         }
@@ -294,7 +294,7 @@ void ShortLinkTaskManager::__RunOnStartTask() { //hzy: 4.2
         ShortLinkInterface* worker = ShortLinkChannelFactory::Create(MessageQueue::Handler2Queue(asyncreg_.Get()), net_source_, first->task.shortlink_host_list, first->task.cgi, first->task.taskid, first->use_proxy);
         worker->OnSend = boost::bind(&ShortLinkTaskManager::__OnSend, this, _1);
         worker->OnRecv = boost::bind(&ShortLinkTaskManager::__OnRecv, this, _1, _2, _3);
-        worker->OnResponse = boost::bind(&ShortLinkTaskManager::__OnResponse, this, _1, _2, _3, _4, _5, _6);
+        worker->OnResponse = boost::bind(&ShortLinkTaskManager::__OnResponse, this, _1, _2, _3, _4, _5, _6);//hzy: 4.10
         first->running_id = (intptr_t)worker;
 
         xassert2(worker && first->running_id);
@@ -323,7 +323,7 @@ struct find_seq {
     ShortLinkInterface* p_worker;
 };
 
-void ShortLinkTaskManager::__OnResponse(ShortLinkInterface* _worker, ErrCmdType _err_type, int _status, AutoBuffer& _body, bool _cancel_retry, ConnectProfile& _conn_profile) {
+void ShortLinkTaskManager::__OnResponse(ShortLinkInterface* _worker, ErrCmdType _err_type, int _status, AutoBuffer& _body, bool _cancel_retry, ConnectProfile& _conn_profile) {//hzy: 4.10
     copy_wrapper<AutoBuffer> body(_body);
     RETURN_SHORTLINK_SYNC2ASYNC_FUNC_TITLE(boost::bind(&ShortLinkTaskManager::__OnResponse, this, _worker, _err_type, _status, body, _cancel_retry, _conn_profile), _worker);
 
@@ -356,15 +356,15 @@ void ShortLinkTaskManager::__OnResponse(ShortLinkInterface* _worker, ErrCmdType 
 	}
 
 	int err_code = 0;
-	int handle_type = Buf2Resp(it->task.taskid, it->task.user_context, body, err_code, Task::kChannelShort);
-
+	int handle_type = Buf2Resp(it->task.taskid, it->task.user_context, body, err_code, Task::kChannelShort);//hzy: 4.11
+    
 	switch(handle_type){
-		case kTaskFailHandleNoError:
+		case kTaskFailHandleNoError://hzy sdt: 2.x
 		{
 			dynamic_timeout_.CgiTaskStatistic(it->task.cgi, (unsigned int)it->transfer_profile.send_data_size + (unsigned int)body.get().Length(), ::gettickcount() - it->transfer_profile.start_send_time);
 			__SingleRespHandle(it, kEctOK, err_code, handle_type, (unsigned int)it->transfer_profile.receive_data_size, _conn_profile);
 			xassert2(fun_notify_network_err_);
-			fun_notify_network_err_(__LINE__, kEctOK, err_code, _conn_profile.ip, _conn_profile.host, _conn_profile.port);
+			fun_notify_network_err_(__LINE__, kEctOK, err_code, _conn_profile.ip, _conn_profile.host, _conn_profile.port);//hzy: 4.12
 		}
 			break;
 		case kTaskFailHandleSessionTimeout:
@@ -386,7 +386,7 @@ void ShortLinkTaskManager::__OnResponse(ShortLinkInterface* _worker, ErrCmdType 
 			fun_notify_network_err_(__LINE__, kEctEnDecode, handle_type, _conn_profile.ip, _conn_profile.host, _conn_profile.port);
 		}
 			break;
-		default:
+		default://hzy sdt: 2.x
 		{
 			xassert2(false, TSF"task decode error fail_handle:%_, taskid:%_", handle_type, it->task.taskid);
 			__SingleRespHandle(it, kEctEnDecode, err_code, handle_type, (unsigned int)it->transfer_profile.receive_data_size, _conn_profile);
@@ -473,7 +473,7 @@ void ShortLinkTaskManager::__BatchErrorRespHandle(ErrCmdType _err_type, int _err
     }
 }
 
-bool ShortLinkTaskManager::__SingleRespHandle(std::list<TaskProfile>::iterator _it, ErrCmdType _err_type, int _err_code, int _fail_handle, size_t _resp_length, const ConnectProfile& _connect_profile) {
+bool ShortLinkTaskManager::__SingleRespHandle(std::list<TaskProfile>::iterator _it, ErrCmdType _err_type, int _err_code, int _fail_handle, size_t _resp_length, const ConnectProfile& _connect_profile) {//hzy: 4.20
     xverbose_function();
     xassert2(kEctServer != _err_type);
     xassert2(_it != lst_cmd_.end());
@@ -499,7 +499,7 @@ bool ShortLinkTaskManager::__SingleRespHandle(std::list<TaskProfile>::iterator _
         				(curtime - _it->start_task_time), _it->remain_retry_count)
         (TSF"cgi:%_, taskid:%_, worker:%_", _it->task.cgi, _it->task.taskid, (ShortLinkInterface*)_it->running_id);
 
-        int cgi_retcode = fun_callback_(_err_type, _err_code, _fail_handle, _it->task, (unsigned int)(curtime - _it->start_task_time));
+        int cgi_retcode = fun_callback_(_err_type, _err_code, _fail_handle, _it->task, (unsigned int)(curtime - _it->start_task_time));//hzy: 4.21
         int errcode = _err_code;
 
         if (_it->running_id) {

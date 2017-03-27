@@ -15,7 +15,7 @@
  Bundled example & readme.
  http://code.google.com/p/feather-ini-parser/wiki/Tutorials
  */
-
+//hzy: initialization文件
 #ifndef COMM_INI_H_
 #define COMM_INI_H_
 

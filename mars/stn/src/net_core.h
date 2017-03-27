@@ -125,7 +125,7 @@ class NetCore {
     MessageQueue::ScopeRegister         asyncreg_;
     NetSource*                          net_source_;
     NetCheckLogic*                      netcheck_logic_;
-    AntiAvalanche*                      anti_avalanche_;
+    AntiAvalanche*                      anti_avalanche_;//hzy: 6.0 客户端防雪崩, 频率限制，流量限制
     
     DynamicTimeout*                     dynamic_timeout_;
     ShortLinkTaskManager*               shortlink_task_manager_;

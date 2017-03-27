@@ -4,6 +4,7 @@
  ============================================================================
  */
 
+
 #include "comm/xlogger/xloggerbase.h"
 #include <stdio.h>
 
@@ -44,9 +45,9 @@ xlogger_appender_t xlogger_SetAppender(xlogger_appender_t _appender) {
     return __xlogger_SetAppender_impl(_appender);
 }
 
-void xlogger_Write(const XLoggerInfo* _info, const char* _log) {
+void xlogger_Write(const XLoggerInfo* _info, const char* _log) {//hzy ocLog: 3
 	if (NULL != &__xlogger_Write_impl)
-		__xlogger_Write_impl(_info, _log);
+		__xlogger_Write_impl(_info, _log);//hzy ocLog: 4
 }
 
 void xlogger_VPrint(const XLoggerInfo* _info, const char* _format, va_list _list) {
@@ -87,9 +88,9 @@ TLogLevel   __xlogger_Level_impl() {return gs_level;}
 void        __xlogger_SetLevel_impl(TLogLevel _level){ gs_level = _level;}
 int         __xlogger_IsEnabledFor_impl(TLogLevel _level) {return gs_level <= _level;}
 
-xlogger_appender_t __xlogger_SetAppender_impl(xlogger_appender_t _appender)  {
+xlogger_appender_t __xlogger_SetAppender_impl(xlogger_appender_t _appender)  {//hzy ocLog: 1.1
     xlogger_appender_t old_appender = gs_appender;
-    gs_appender = _appender;
+    gs_appender = _appender;//hzy ocLog: 1.2
     return old_appender;
 }
 
@@ -112,7 +113,7 @@ void __xlogger_Write_impl(const XLoggerInfo* _info, const char* _log) {
         }
         gs_appender(_info, "NULL == _log");
     } else {
-        gs_appender(_info, _log);
+        gs_appender(_info, _log);//hzy ocLog: 1.3 函数指针跳转
     }
 }
 

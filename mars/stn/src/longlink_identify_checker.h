@@ -24,7 +24,8 @@
 #include <stdint.h>
 
 #include "mars/comm/autobuffer.h"
-
+//hzy: 目前未被引用，怀疑netsource将相关代码清理了
+//hzy:  cmd 命令序校验
 class LongLinkIdentifyChecker {
   public:
     LongLinkIdentifyChecker();

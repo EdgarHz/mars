@@ -93,7 +93,7 @@ void LogCrypt::SetHeaderInfo(char* _data, bool _is_async) {
 void LogCrypt::SetTailerInfo(char* _data) {
     memcpy(_data, &kMagicEnd, sizeof(kMagicEnd));
 }
-
+sss
 uint32_t LogCrypt::GetLogLen(const char*  const _data, size_t _len) {
     if (_len < GetHeaderLen()) return 0;
     

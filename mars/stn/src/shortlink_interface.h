@@ -26,7 +26,7 @@
 
 namespace mars {
 namespace stn {
-
+//hzy: 接口定义  短链接
 class ShortLinkInterface {
   public:
 	virtual ~ShortLinkInterface(){};

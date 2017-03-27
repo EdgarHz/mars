@@ -175,7 +175,7 @@ NetCore::NetCore()
     longlink_task_manager_->fun_notify_session_timeout_ = boost::bind(&NetCore::__OnSessionTimeout, this, _1, _2);
     longlink_task_manager_->fun_notify_network_err_ = boost::bind(&NetCore::__OnLongLinkNetworkError, this, _1, _2, _3, _4, _5);
     longlink_task_manager_->fun_anti_avalanche_check_ = boost::bind(&AntiAvalanche::Check, anti_avalanche_, _1, _2, _3);
-    longlink_task_manager_->LongLinkChannel().fun_network_report_ = boost::bind(&NetCore::__OnLongLinkNetworkError, this, _1, _2, _3, _4, _5);
+    longlink_task_manager_->LongLinkChannel().fun_network_report_ = boost::bind(&NetCore::__OnLongLinkNetworkError, this, _1, _2, _3, _4, _5);//hzy sdt: 2.x
 
     longlink_task_manager_->LongLinkChannel().SignalConnection.connect(boost::bind(&TimingSync::OnLongLinkStatuChanged, timing_sync_, _1));
     longlink_task_manager_->LongLinkChannel().SignalConnection.connect(boost::bind(&NetCore::__OnLongLinkConnStatusChange, this, _1));
@@ -187,13 +187,14 @@ NetCore::NetCore()
     netsource_timercheck_->fun_time_check_suc_ = boost::bind(&NetCore::__OnTimerCheckSuc, this);
 
 #endif
+        
         //hzy: 5.1 net bind function to deal
     // async
-    shortlink_task_manager_->fun_callback_ = boost::bind(&NetCore::__CallBack, this, (int)kCallFromShort, _1, _2, _3, _4, _5);
+    shortlink_task_manager_->fun_callback_ = boost::bind(&NetCore::__CallBack, this, (int)kCallFromShort, _1, _2, _3, _4, _5);//hzy: 4.22
     
     // sync
     shortlink_task_manager_->fun_notify_session_timeout_ = boost::bind(&NetCore::__OnSessionTimeout, this, _1, _2);
-    shortlink_task_manager_->fun_notify_network_err_ = boost::bind(&NetCore::__OnShortLinkNetworkError, this, _1, _2, _3, _4, _5, _6);
+    shortlink_task_manager_->fun_notify_network_err_ = boost::bind(&NetCore::__OnShortLinkNetworkError, this, _1, _2, _3, _4, _5, _6);//hzy: 4.12  //hzy sdt: 2.x
     shortlink_task_manager_->fun_anti_avalanche_check_ = boost::bind(&AntiAvalanche::Check, anti_avalanche_, _1, _2, _3);
     shortlink_task_manager_->fun_shortlink_response_ = boost::bind(&NetCore::__OnShortLinkResponse, this, _1);
 
@@ -247,8 +248,8 @@ void NetCore::__Release(NetCore* _instance) {
 }
 
 
-void NetCore::StartTask(const Task& _task) {
-    
+void NetCore::StartTask(const Task& _task) {    //hzy: 4.2
+   
     ASYNC_BLOCK_START
 
     xgroup2_define(group);
@@ -325,7 +326,7 @@ void NetCore::StartTask(const Task& _task) {
 #endif
 
     case Task::kChannelShort:
-        start_ok = shortlink_task_manager_->StartTask(task);
+        start_ok = shortlink_task_manager_->StartTask(task);//hzy: 4.3
         break;
 
     default:
@@ -498,7 +499,7 @@ bool NetCore::LongLinkIsConnected() {
     return false;
 }
 
-int NetCore::__CallBack(int _from, ErrCmdType _err_type, int _err_code, int _fail_handle, const Task& _task, unsigned int _taskcosttime) {
+int NetCore::__CallBack(int _from, ErrCmdType _err_type, int _err_code, int _fail_handle, const Task& _task, unsigned int _taskcosttime) {//hzy: 4.22
 
 	if (task_callback_hook_ && 0 == task_callback_hook_(_from, _err_type, _err_code, _fail_handle, _task)) {
 		xwarn2(TSF"task_callback_hook let task return. taskid:%_, cgi%_.", _task.taskid, _task.cgi);
@@ -506,7 +507,7 @@ int NetCore::__CallBack(int _from, ErrCmdType _err_type, int _err_code, int _fai
 	}
 
     if (kEctOK == _err_type || kTaskFailHandleTaskEnd == _fail_handle)
-    	return OnTaskEnd(_task.taskid, _task.user_context, _err_type, _err_code);
+    	return OnTaskEnd(_task.taskid, _task.user_context, _err_type, _err_code);//hzy: 4.23
 
     if (kCallFromZombie == _from) return OnTaskEnd(_task.taskid, _task.user_context, _err_type, _err_code);
 
@@ -549,7 +550,7 @@ void NetCore::__OnLongLinkNetworkError(int _line, ErrCmdType _err_type, int _err
     SYNC2ASYNC_FUNC(boost::bind(&NetCore::__OnLongLinkNetworkError, this, _line, _err_type,  _err_code, _ip, _port));
     xassert2(MessageQueue::CurrentThreadMessageQueue() == messagequeue_creater_.GetMessageQueue());
 
-    netcheck_logic_->UpdateLongLinkInfo(longlink_task_manager_->GetTasksContinuousFailCount(), _err_type == kEctOK);
+    netcheck_logic_->UpdateLongLinkInfo(longlink_task_manager_->GetTasksContinuousFailCount(), _err_type == kEctOK);//hzy sdt: 2.x
 
     if (kEctOK == _err_type) zombie_task_manager_->RedoTasks();
 
@@ -565,11 +566,11 @@ void NetCore::__OnLongLinkNetworkError(int _line, ErrCmdType _err_type, int _err
 }
 #endif
 
-void NetCore::__OnShortLinkNetworkError(int _line, ErrCmdType _err_type, int _err_code, const std::string& _ip, const std::string& _host, uint16_t _port) {
+void NetCore::__OnShortLinkNetworkError(int _line, ErrCmdType _err_type, int _err_code, const std::string& _ip, const std::string& _host, uint16_t _port) {//hzy: 4.12
     SYNC2ASYNC_FUNC(boost::bind(&NetCore::__OnShortLinkNetworkError, this, _line, _err_type,  _err_code, _ip, _host, _port));
     xassert2(MessageQueue::CurrentThreadMessageQueue() == messagequeue_creater_.GetMessageQueue());
 
-    netcheck_logic_->UpdateShortLinkInfo(shortlink_task_manager_->GetTasksContinuousFailCount(), _err_type == kEctOK);
+    netcheck_logic_->UpdateShortLinkInfo(shortlink_task_manager_->GetTasksContinuousFailCount(), _err_type == kEctOK);//hzy sdt: 2.x
 
     shortlink_try_flag_ = true;
 
@@ -579,7 +580,7 @@ void NetCore::__OnShortLinkNetworkError(int _line, ErrCmdType _err_type, int _er
         ++shortlink_error_count_;
     }
 
-    __ConnStatusCallBack();
+    __ConnStatusCallBack();//hzy: 4.13
 
 #ifdef USE_LONG_LINK
     if (kEctOK == _err_type) zombie_task_manager_->RedoTasks();
@@ -612,7 +613,7 @@ void NetCore::__OnLongLinkConnStatusChange(LongLink::TLongLinkStatus _status) {
 }
 #endif
 
-void NetCore::__ConnStatusCallBack() {
+void NetCore::__ConnStatusCallBack() {//hzy: 4.13
 
     int all_connstatus = 0;
 
@@ -694,7 +695,7 @@ void NetCore::__ConnStatusCallBack() {
 #endif
 
     xinfo2(TSF"reportNetConnectInfo all_connstatus:%_, longlink_connstatus:%_", all_connstatus, longlink_connstatus);
-    ReportConnectStatus(all_connstatus, longlink_connstatus);
+    ReportConnectStatus(all_connstatus, longlink_connstatus);//hzy: 4.14
 }
 
 void NetCore::__OnTimerCheckSuc() {

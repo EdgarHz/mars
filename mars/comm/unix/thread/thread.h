@@ -72,7 +72,7 @@ class Thread {
   private:
     class RunnableReference {//hzy: 引用计数，自动释放
       public:
-        RunnableReference(Runnable* _target)
+        RunnableReference(Runnable* _target)//hzy: 1.0.2
             : target(_target), count(0), tid(0), isjoined(false), isended(true)
             , aftertime(LONG_MAX), periodictime(LONG_MAX), iscanceldelaystart(false)
             , condtime(), splock(), isinthread(false), killsig(0) {
@@ -124,7 +124,7 @@ class Thread {
     template<class T>
     explicit Thread(const T& op, const char* _thread_name = NULL)
         : runable_ref_(NULL) {
-        runable_ref_ = new RunnableReference(detail::transform(op));//hzy: 1.3, static thread init.
+        runable_ref_ = new RunnableReference(detail::transform(op));//hzy: 1.0.2
         ScopedSpinLock lock(runable_ref_->splock);
         runable_ref_->AddRef();
 
@@ -152,17 +152,22 @@ class Thread {
     }
 
     int start(bool* _newone = NULL) {
+        //hzy: 1.1.3
+        //hzy: 1.3.1
+        //hzy: 1.2.0
         ScopedSpinLock lock(runable_ref_->splock);
 
         if (_newone) *_newone = false;
 
-        if (isruning())return 0;
+        if (isruning())return 0; //hzy: 1.*.* ret!
 
         ASSERT(runable_ref_->target);
         runable_ref_->isended = false;
-        runable_ref_->AddRef();//hzy: 1.5, reference count++
-
+        runable_ref_->AddRef();//hzy: todo
+        //hzy: 1.1.4
+        //hzy: 1.3.2
         int ret =  pthread_create(reinterpret_cast<thread_tid*>(&runable_ref_->tid), &attr_, start_routine, runable_ref_);
+
         ASSERT(0 == ret);
 
         if (_newone) *_newone = true;
@@ -406,11 +411,11 @@ class Thread {
         (const_cast<RunnableReference*>(runableref))->RemoveRef(lock);
     }
 
-    static void* start_routine(void* arg) {
+    static void* start_routine(void* arg) {//hzy: 1.1.5
         init(arg);
         volatile RunnableReference* runableref = static_cast<RunnableReference*>(arg);
         pthread_cleanup_push(&cleanup, arg);
-        runableref->target->run();//hzy: 1.6, run.
+        runableref->target->run();//hzy: 1.1.6
         pthread_cleanup_pop(1);
         return 0;
     }

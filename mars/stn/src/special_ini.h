@@ -28,6 +28,7 @@
 /**
  *	In order to allow the value of section is anything
  */
+//hzy: initialization文件 特殊
 class SpecialINI : public INI {
 public:
 	SpecialINI(const std::string& fileName, bool parse = true) : INI(fileName, parse){

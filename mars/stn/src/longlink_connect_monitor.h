@@ -31,7 +31,7 @@ class ActiveLogic;
 
 namespace mars {
     namespace stn {
-        
+        //hzy: 监听前后台等状态，对长链接进行控制
 class LongLinkConnectMonitor {
   public:
     LongLinkConnectMonitor(ActiveLogic& _activelogic, LongLink& _longlinkk, MessageQueue::MessageQueue_t _id);

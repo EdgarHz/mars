@@ -23,7 +23,7 @@
 #include "mars/comm/thread/atomic_oper.h"
 
 
-namespace mars{
+namespace mars {
     namespace stn{
         
 Task::Task() {

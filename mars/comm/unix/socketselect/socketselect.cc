@@ -28,7 +28,8 @@
 
 #include "mars/comm/xlogger/xlogger.h"
 
-
+//broken_: 当write或close后为true.
+//         当read或clear后为false.
 SocketSelectBreaker::SocketSelectBreaker()
 : create_success_(true),
 broken_(false) {

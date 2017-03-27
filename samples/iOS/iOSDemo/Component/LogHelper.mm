@@ -37,7 +37,7 @@ static NSUInteger g_processID = 0;
     info.tid = (uintptr_t)[NSThread currentThread];
     info.maintid = (uintptr_t)[NSThread mainThread];
     info.pid = g_processID;
-    xlogger_Write(&info, message.UTF8String);
+    xlogger_Write(&info, message.UTF8String);//hzy ocLog: 0
 }
 
 + (void)logWithLevel:(TLogLevel)logLevel moduleName:(const char*)moduleName fileName:(const char*)fileName lineNumber:(int)lineNumber funcName:(const char*)funcName format:(NSString *)format, ... {

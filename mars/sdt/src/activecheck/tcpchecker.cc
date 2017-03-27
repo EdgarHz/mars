@@ -53,7 +53,7 @@ int TcpChecker::CancelDoCheck() {
 
 void TcpChecker::__DoCheck(CheckRequestProfile& _check_request) {
     xinfo_function();
-
+    //hzy sdt: 5.0 通过TcpQuery发送空指令数据，并接收相应的resp
     for (CheckIPPorts_Iterator iter = _check_request.longlink_items.begin(); iter != _check_request.longlink_items.end(); ++iter) {
     	std::string host = iter->first;
     	for (std::vector<CheckIPPort>::iterator ipport = iter->second.begin(); ipport != iter->second.end(); ++ipport) {

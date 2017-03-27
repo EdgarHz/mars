@@ -81,7 +81,7 @@ static std::string sg_cache_logdir;
 static std::string sg_logfileprefix;
 
 static Mutex sg_mutex_log_file;
-static FILE* sg_logfile = NULL;
+static FILE* sg_logfile = NULL;  //hzy log: 文件指针
 static time_t sg_openfiletime = 0;
 static std::string sg_current_dir;
 
@@ -105,7 +105,7 @@ static bool sg_consolelog_open = false;
 #endif
 
 static void __async_log_thread();
-static Thread sg_thread_async(&__async_log_thread);
+static Thread sg_thread_async(&__async_log_thread);//hzy: 1.2.0
 
 static const unsigned int kBufferBlockLength = 150 * 1024;
 static const long kMaxLogAliveTime = 10 * 24 * 60 * 60;	// 10 days in second
@@ -294,7 +294,7 @@ static void __writetips2console(const char* _tips_format, ...) {
     ConsoleLog(&info, tips_info);
 }
 
-static bool __writefile(const void* _data, size_t _len, FILE* _file) {
+static bool __writefile(const void* _data, size_t _len, FILE* _file) {//hzy log:6
     if (NULL == _file) {
         assert(false);
         return false;
@@ -318,8 +318,8 @@ static bool __writefile(const void* _data, size_t _len, FILE* _file) {
         char tmp[256] = {0};
         size_t len = sizeof(tmp);
         LogBuffer::Write(err_log, strnlen(err_log, sizeof(err_log)), tmp, len);
-
-        fwrite(tmp, len, 1, _file);
+        
+        fwrite(tmp, len, 1, _file);//hzy log:7
 
         return false;
     }
@@ -370,7 +370,7 @@ static bool __openlogfile(const std::string& _log_dir) {
         return NULL != sg_logfile;
     }
 
-    sg_logfile = fopen(logfilepath, "ab");
+    sg_logfile = fopen(logfilepath, "ab");//hzy log: 5
 
 	if (NULL == sg_logfile) {
         __writetips2console("open file error:%d %s, path:%s", errno, strerror(errno), logfilepath);
@@ -413,7 +413,7 @@ static void __closelogfile() {
     sg_logfile = NULL;
 }
 
-static void __log2file(const void* _data, size_t _len) {
+static void __log2file(const void* _data, size_t _len) {//hzy log:4
 	if (NULL == _data || 0 == _len || sg_logdir.empty()) {
 		return;
 	}
@@ -421,8 +421,8 @@ static void __log2file(const void* _data, size_t _len) {
 	ScopedLock lock_file(sg_mutex_log_file);
 
 	if (sg_cache_logdir.empty()) {
-        if (__openlogfile(sg_logdir)) {
-            __writefile(_data, _len, sg_logfile);
+        if (__openlogfile(sg_logdir)) {//hzy log:4
+            __writefile(_data, _len, sg_logfile);//hzy log: 6
             if (kAppednerAsync == sg_mode) {
                 __closelogfile();
             }
@@ -495,10 +495,10 @@ static void __writetips2file(const char* _tips_format, ...) {
     
     LogBuffer::Write(tips_info, strnlen(tips_info, sizeof(tips_info)), tmp, len);
     
-    __log2file(tmp, len);
+    __log2file(tmp, len);//hzy log: 3
 }
 
-static void __async_log_thread() {
+static void __async_log_thread() {//hzy: 1.2.0
     while (true) {
 
         ScopedLock lock_buffer(sg_mutex_buffer_async);
@@ -553,7 +553,7 @@ static void __appender_async(const XLoggerInfo* _info, const char* _log) {
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-void xlogger_appender(const XLoggerInfo* _info, const char* _log) {
+void xlogger_appender(const XLoggerInfo* _info, const char* _log) {//hzy ocLog: 5
     if (sg_log_close) return;
 
     SCOPE_ERRNO();
@@ -694,7 +694,7 @@ static void get_mark_info(char* _info, size_t _infoLen) {
 	snprintf(_info, _infoLen, "[%" PRIdMAX ",%" PRIdMAX "][%s]", xlogger_pid(), xlogger_tid(), tmp_time);
 }
 
-void appender_open(TAppenderMode _mode, const char* _dir, const char* _nameprefix) {
+void appender_open(TAppenderMode _mode, const char* _dir, const char* _nameprefix) {//hzy log: 1
 	assert(_dir);
 	assert(_nameprefix);
     
@@ -703,7 +703,7 @@ void appender_open(TAppenderMode _mode, const char* _dir, const char* _nameprefi
         return;
     }
 
-    xlogger_SetAppender(&xlogger_appender);
+    xlogger_SetAppender(&xlogger_appender);//hzy ocLog: 1 在启动appender时，设置oc的log实现对象为当前对象
     
 	//mkdir(_dir, S_IRWXU|S_IRWXG|S_IRWXO);
 	boost::filesystem::create_directories(_dir);
@@ -748,7 +748,7 @@ void appender_open(TAppenderMode _mode, const char* _dir, const char* _nameprefi
     get_mark_info(mark_info, sizeof(mark_info));
 
     if (buffer.Ptr()) {
-        __writetips2file("~~~~~ begin of mmap ~~~~~\n");
+        __writetips2file("~~~~~ begin of mmap ~~~~~\n");//hzy log: 2
         __log2file(buffer.Ptr(), buffer.Length());
         __writetips2file("~~~~~ end of mmap ~~~~~%s\n", mark_info);
     }

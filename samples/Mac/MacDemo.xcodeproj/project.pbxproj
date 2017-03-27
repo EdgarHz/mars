@@ -27,7 +27,7 @@
 		1FB576D81CE1D82100ADCF8C /* app_callback.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FB576D11CE1D82100ADCF8C /* app_callback.mm */; };
 		1FB576DA1CE1D82100ADCF8C /* longlink_packer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1FB576D41CE1D82100ADCF8C /* longlink_packer.cc */; };
 		1FB576DB1CE1D82100ADCF8C /* stn_callback.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FB576D71CE1D82100ADCF8C /* stn_callback.mm */; };
-		4B3C3E221E12111300351897 /* mars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB712711DE81ED300185734 /* mars.framework */; };
+		44F724EF1E5430E10073A940 /* libmars.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44F724EC1E54309E0073A940 /* libmars.a */; };
 		4BB712741DE81EF900185734 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB712731DE81EF900185734 /* libz.tbd */; };
 		4BB712B81DE81FC100185734 /* Chat.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB7127E1DE81FC100185734 /* Chat.pb.m */; };
 		4BB712B91DE81FC100185734 /* chat.proto in Resources */ = {isa = PBXBuildFile; fileRef = 4BB7127F1DE81FC100185734 /* chat.proto */; };
@@ -65,6 +65,23 @@
 		4BB713121DE8254B00185734 /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BB713111DE8254B00185734 /* libresolv.9.tbd */; };
 		4BDBD1701E091571006C62F5 /* NetworkStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDBD16F1E091571006C62F5 /* NetworkStatus.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		44F724EB1E54309E0073A940 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 44F724E71E54309D0073A940 /* mars-open-mac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4BB7124F1DE811B100185734;
+			remoteInfo = mars;
+		};
+		44F724ED1E5430A70073A940 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 44F724E71E54309D0073A940 /* mars-open-mac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 3170A026177887B0004F5DDA;
+			remoteInfo = mars;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		1F4489231E0184F100FF3728 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -105,7 +122,7 @@
 		1FB576D51CE1D82100ADCF8C /* longlink_packer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = longlink_packer.h; sourceTree = "<group>"; };
 		1FB576D61CE1D82100ADCF8C /* stn_callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stn_callback.h; sourceTree = "<group>"; };
 		1FB576D71CE1D82100ADCF8C /* stn_callback.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = stn_callback.mm; sourceTree = "<group>"; };
-		4BB712711DE81ED300185734 /* mars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = mars.framework; path = Kernel/MarsLib/mars.framework; sourceTree = "<group>"; };
+		44F724E71E54309D0073A940 /* mars-open-mac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "mars-open-mac.xcodeproj"; path = "../../mars/mars-open-mac.xcodeproj"; sourceTree = "<group>"; };
 		4BB712731DE81EF900185734 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		4BB7127D1DE81FC100185734 /* Chat.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chat.pb.h; sourceTree = "<group>"; };
 		4BB7127E1DE81FC100185734 /* Chat.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chat.pb.m; sourceTree = "<group>"; };
@@ -184,7 +201,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B3C3E221E12111300351897 /* mars.framework in Frameworks */,
+				44F724EF1E5430E10073A940 /* libmars.a in Frameworks */,
 				4BB713121DE8254B00185734 /* libresolv.9.tbd in Frameworks */,
 				4BB712FF1DE822DA00185734 /* CoreFoundation.framework in Frameworks */,
 				4BB712FD1DE822D300185734 /* SystemConfiguration.framework in Frameworks */,
@@ -252,6 +269,14 @@
 			path = PublicComponentV2;
 			sourceTree = "<group>";
 		};
+		44F724E81E54309D0073A940 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				44F724EC1E54309E0073A940 /* libmars.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		4BB712701DE81ED200185734 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -262,7 +287,6 @@
 				4BB712F81DE822BB00185734 /* CoreWLAN.framework */,
 				4BB712EC1DE8222A00185734 /* CFNetwork.framework */,
 				4BB712731DE81EF900185734 /* libz.tbd */,
-				4BB712711DE81ED300185734 /* mars.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -360,6 +384,7 @@
 		557B21C91CC8ECC40076B9EE = {
 			isa = PBXGroup;
 			children = (
+				44F724E71E54309D0073A940 /* mars-open-mac.xcodeproj */,
 				1F4489221E0184F100FF3728 /* CoreUI */,
 				1FAEF23E1DEEB1AB002F3AA6 /* Component */,
 				4BB712751DE81FC100185734 /* Bussiness */,
@@ -393,6 +418,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				44F724EE1E5430A70073A940 /* PBXTargetDependency */,
 			);
 			name = MacDemo;
 			productName = mactest;
@@ -424,12 +450,28 @@
 			mainGroup = 557B21C91CC8ECC40076B9EE;
 			productRefGroup = 557B21D31CC8ECC40076B9EE /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 44F724E81E54309D0073A940 /* Products */;
+					ProjectRef = 44F724E71E54309D0073A940 /* mars-open-mac.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				557B21D11CC8ECC40076B9EE /* MacDemo */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		44F724EC1E54309E0073A940 /* libmars.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libmars.a;
+			remoteRef = 44F724EB1E54309E0073A940 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		557B21D01CC8ECC40076B9EE /* Resources */ = {
@@ -516,6 +558,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		44F724EE1E5430A70073A940 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = mars;
+			targetProxy = 44F724ED1E5430A70073A940 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		1F4489261E0184F100FF3728 /* Main.storyboard */ = {

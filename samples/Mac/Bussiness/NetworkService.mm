@@ -61,8 +61,8 @@ static NetworkService * sharedSingleton = nil;
     
 }
 
-- (void)setCallBack {
-    mars::stn::SetCallback(mars::stn::StnCallBack::Instance());//hzy: 4.5
+- (void)setCallBack {//hzy: 4.0
+    mars::stn::SetCallback(mars::stn::StnCallBack::Instance());//hzy: 4.0
     mars::app::SetCallback(mars::app::AppCallBack::Instance());
 }
 
@@ -106,15 +106,15 @@ static NetworkService * sharedSingleton = nil;
     mars::baseevent::OnDestroy();
 }
 
-- (int)startTask:(CGITask *)task ForUI:(id<UINotifyDelegate>)delegateUI {
+- (int)startTask:(CGITask *)task ForUI:(id<UINotifyDelegate>)delegateUI {//hzy: 4.1
     Task ctask;
     ctask.cmdid = task.cmdid;
     ctask.channel_select = task.channel_select;
     ctask.cgi = std::string(task.cgi.UTF8String);
     ctask.shortlink_host_list.push_back(std::string(task.host.UTF8String));
     ctask.user_context = (__bridge void*)task;
-    
-    mars::stn::StartTask(ctask);
+
+    mars::stn::StartTask(ctask);    //hzy: 4.2
     
     NSString *taskIdKey = [NSString stringWithFormat:@"%d", ctask.taskid];
     [_delegate addObserver:delegateUI forKey:taskIdKey];
@@ -162,6 +162,7 @@ static NetworkService * sharedSingleton = nil;
 }
 
 - (NSInteger)OnTaskEndWithTaskID:(uint32_t)tid userContext:(const void *)context errType:(uint32_t)errtype errCode:(uint32_t)errcode; {
+    //hzy: 4.25
     CGITask *task = (__bridge CGITask *)context;
     return [_delegate OnTaskEndWithTaskID:tid task:task errType:errtype errCode:errcode];
 }

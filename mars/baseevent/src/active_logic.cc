@@ -17,6 +17,15 @@
  *      Author: yerungui
  */
 
+/**
+ baseevent-mac项目，定义了几种常用信号，并提供了函数调用和函数指针两种获取方式。
+ 
+ active_logic:
+ 静态方法，启动加载，监听onforeground信号，使ActiveLogic单例响应处理。
+ 若处理线程并不为MessageQueue::GetDefMessageQueue()则push进栈。
+ 若前后台状态有变化，触发SignalActive信号方法。
+ */
+
 #include "boost/bind.hpp"
 
 #include "mars/baseevent/active_logic.h"
@@ -36,7 +45,7 @@ static void __initbind_baseprjevent() {
     GetSignalOnForeground().connect(&onForeground);//hzy: 3.2
 }
 
-BOOT_RUN_STARTUP(__initbind_baseprjevent);//hzy: 3.1 bind foreground signal to func.
+BOOT_RUN_STARTUP(__initbind_baseprjevent);//hzy: 3.1 boost::signal信号绑定Active相关消息
 
 #ifdef ANDROID
 #define INACTIVE_TIMEOUT (10*60*1000) //ms

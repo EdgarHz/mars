@@ -34,6 +34,7 @@ class LongLink;
 class NetSource;
 class ShortLinkInterface;
 
+    //hzy: 工厂类 返回长链接对象或短链接对象
 namespace ShortLinkChannelFactory {
 
 ShortLinkInterface* Create(MessageQueue::MessageQueue_t _messagequeueid, NetSource& _netsource, const std::vector<std::string>& _host_list,

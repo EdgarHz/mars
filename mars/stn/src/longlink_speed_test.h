@@ -43,7 +43,7 @@ enum ELongLinkSpeedTestState {
 
 namespace mars {
     namespace stn {
-
+//hzy: 生成socket对象，但是具体读写由SocketSelect操作。HandleSetFD
 class LongLinkSpeedTestItem {
   public:
     LongLinkSpeedTestItem(const std::string& _ip, uint16_t _port);
@@ -77,12 +77,14 @@ class LongLinkSpeedTestItem {
     AutoBuffer resp_ab_;
 };
 
+        //hzy:操作LongLinkSpeedTestItem来判断最佳socket
+        //hzy: 目前未被引用，怀疑netsource将相关代码清理了
 class LongLinkSpeedTest {
   public:
     LongLinkSpeedTest(const boost::shared_ptr<NetSource>& _netsource);
     ~LongLinkSpeedTest();
 
-    bool GetFastestSocket(int& _fdSocket, std::string& _strIp, unsigned int& _port, IPSourceType& _type, unsigned long& _connectMillSec);
+    bool GetFastestSocket(int& _fdSocket, std::string& _strIp, unsigned int& _port, IPSourceType& _type, unsigned long& _connectMillSec);//hzy:!
 
     boost::shared_ptr<NetSource> GetNetSource();
   private:

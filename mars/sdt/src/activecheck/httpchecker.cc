@@ -75,7 +75,7 @@ void HttpChecker::__DoCheck(CheckRequestProfile& _check_request) {
     		profile.url = (iter->first.empty() ? DEFAULT_HTTP_HOST : (iter->first));
     		profile.url.append(sg_netcheck_cgi.c_str());
     		uint64_t start_time = gettickcount();
-    		std::string errmsg;
+    		std::string errmsg;//hzy sdt: httpchecker 完全没有任何处理。。。
     		int ret = SendHttpQuery(profile.url, profile.status_code, errmsg, _check_request.total_timeout);
     		uint64_t cost_time = gettickcount() - start_time;
     		profile.rtt = cost_time;

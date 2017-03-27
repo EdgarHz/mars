@@ -61,7 +61,7 @@ static void __initbind_baseprjevent() {
 	GetSignalOnDestroy().connect(&onDestroy);
 }
 
-BOOT_RUN_STARTUP(__initbind_baseprjevent);
+BOOT_RUN_STARTUP(__initbind_baseprjevent);//hzy sdt: 1.0
 
 //active netcheck interface
 void StartActiveCheck(CheckIPPorts& _longlink_check_items, CheckIPPorts& _shortlink_check_items, int _mode, int _timeout) {
@@ -79,7 +79,7 @@ void SetCallBack(Callback* const callback) {
 #ifndef ANDROID
 
 WEAK_FUNC void ReportNetCheckResult(std::vector<CheckResultProfile>& _check_results) {
-
+//hzy sdt: 3.7
 }
 
 #endif

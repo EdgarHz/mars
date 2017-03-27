@@ -623,7 +623,7 @@ static void __ReleaseMessageQueueInfo() {
     }
 }
 
-void RunLoop::Run() {
+void RunLoop::Run() {//hzy: 1.3.3
     MessageQueue_t id = CurrentThreadMessageQueue();
     ASSERT(0 != id);
     {
@@ -631,7 +631,7 @@ void RunLoop::Run() {
         sg_messagequeue_map[id].lst_runloop_info.push_back(RunLoopInfo());
     }
 
-    while (true) {
+    while (true) {//hzy: 1.3.4
         ScopedLock lock(sg_messagequeue_map_mutex);
         MessageQueueContent& content = sg_messagequeue_map[id];
         content.lst_runloop_info.back().runing_message_id = KNullPost;
@@ -751,7 +751,7 @@ MessageQueueCreater::MessageQueueCreater(bool _iscreate, const char* _msg_queue_
 {}
     
 MessageQueueCreater::MessageQueueCreater(boost::shared_ptr<RunloopCond> _breaker, bool _iscreate, const char* _msg_queue_name)
-    : thread_(boost::bind(&MessageQueueCreater::__ThreadRunloop, this), _msg_queue_name)
+    : thread_(boost::bind(&MessageQueueCreater::__ThreadRunloop, this), _msg_queue_name)//hzy: 1.3.1
 	, messagequeue_id_(KInvalidQueueID), breaker_(_breaker) {
 	if (_iscreate)
 		CreateMessageQueue();
@@ -761,11 +761,11 @@ MessageQueueCreater::~MessageQueueCreater() {
     CancelAndWait();
 }
 
-void MessageQueueCreater::__ThreadRunloop() {
+void MessageQueueCreater::__ThreadRunloop() {//hzy: 1.3.2
     ScopedLock lock(messagequeue_mutex_);
     lock.unlock();
     
-    RunLoop().Run();
+    RunLoop().Run();//hzy: 1.3.3
     messagequeue_id_ = 0;
 }
 
@@ -777,7 +777,7 @@ MessageQueue_t MessageQueueCreater::CreateMessageQueue() {
     ScopedLock lock(messagequeue_mutex_);
 
     if (thread_.isruning()) return messagequeue_id_;
-
+    //hzy: 1.3.1
     if (0 != thread_.start()) { return KInvalidQueueID;}
     messagequeue_id_ = __CreateMessageQueueInfo(breaker_, thread_.tid());
 

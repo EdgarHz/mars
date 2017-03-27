@@ -122,7 +122,7 @@ static bool           isValidIpAddress(const char* _ipaddress);
  *返回值:          当返回-1表示查询失败，当返回0则表示查询成功
  *
  */
-int socket_gethostbyname(const char* _host, socket_ipinfo_t* _ipinfo, int _timeout /*ms*/, const char* _dnsserver, NetCheckTrafficMonitor* _traffic_monitor) {
+int socket_gethostbyname(const char* _host, socket_ipinfo_t* _ipinfo, int _timeout /*ms*/, const char* _dnsserver, NetCheckTrafficMonitor* _traffic_monitor) {//hzy sdt: 6.1
     xinfo2(TSF"in socket_gethostbyname,_host=%0", _host);
 
     if (NULL == _host) return -1;
@@ -138,7 +138,7 @@ int socket_gethostbyname(const char* _host, socket_ipinfo_t* _ipinfo, int _timeo
         dns_servers.push_back(_dnsserver);
     } else {
         xinfo2(TSF"use default DNS server.");
-        GetHostDnsServerIP(dns_servers);
+        GetHostDnsServerIP(dns_servers);//hzy sdt: 6.2 default dns server
     }
 
     SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);  // UDP packet for DNS queries
@@ -477,7 +477,7 @@ void GetHostDnsServerIP(std::vector<std::string>& _dns_servers) {
         while (!fin.eof()) {
             if (fin.getline(str, LINE_LENGTH).good()) {
                 std::string s(str);
-                int num = (int)s.find(NAME_SVR, 0);
+                int num = (int)s.find(NAME_SVR, 0);//hzy sdt: 6.3  find name server
 
                 if (num >= 0) {
                     s.erase(std::remove_if(s.begin(), s.end(), isspace), s.end());
@@ -497,7 +497,7 @@ void GetHostDnsServerIP(std::vector<std::string>& _dns_servers) {
             struct sockaddr_in nsaddr;
 
             for (int i = 0; i < stat.nscount; i++) {
-                nsaddr = stat.nsaddr_list[i];
+                nsaddr = stat.nsaddr_list[i];//hzy sdt: 6.3  find name server
                 const char* nsIP = socket_address(nsaddr).ip();
 
                 if (NULL != nsIP)

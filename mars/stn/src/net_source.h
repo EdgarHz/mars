@@ -40,7 +40,7 @@ namespace mars {
     namespace stn {
 
 struct IPPortItem;
-
+//hzy:  全局网络资源配置表
 class NetSource {
   public:
     class DnsUtil {

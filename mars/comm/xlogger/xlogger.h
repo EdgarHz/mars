@@ -377,7 +377,7 @@ public:
     {
         m_exitmsg += _exitmsg;
     }
-    
+                                                                                                                                                                                                                                                                                                  
 private:
     XScopeTracer(const XScopeTracer&);
     XScopeTracer& operator=(const XScopeTracer&);

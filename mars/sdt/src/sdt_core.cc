@@ -39,7 +39,7 @@ using namespace mars::sdt;
 #define RETURN_NETCHECKER_SYNC2ASYNC_FUNC(func) RETURN_SYNC2ASYNC_FUNC(func, async_reg_.Get(), )
 
 SdtCore::SdtCore()
-    : thread_(boost::bind(&SdtCore::__RunOn, this))
+    : thread_(boost::bind(&SdtCore::__RunOn, this))//hzy sdt: 1.2
     , check_list_(std::list<BaseChecker*>())
     , cancel_(false)
     , checking_(false) {
@@ -58,7 +58,7 @@ SdtCore::~SdtCore() {
     }
 }
 
-void SdtCore::StartCheck(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink_items, int _mode, int _timeout) {
+void SdtCore::StartCheck(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink_items, int _mode, int _timeout) {//hzy sdt: 3.0
     xinfo_function();
     ScopedLock lock(checking_mutex_);
 
@@ -66,11 +66,12 @@ void SdtCore::StartCheck(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink
 
     __InitCheckReq(_longlink_items, _shortlink_items, _mode, _timeout);
 
-	if (thread_.isruning() || thread_.start() != 0)
+	if (thread_.isruning()
+        || thread_.start() != 0)//hzy sdt: 3.3
 		return;
 }
 
-void SdtCore::__InitCheckReq(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink_items, int _mode, int _timeout) {
+void SdtCore::__InitCheckReq(CheckIPPorts& _longlink_items, CheckIPPorts& _shortlink_items, int _mode, int _timeout) {//hzy sdt: 3.1
 	xverbose_function();
 	checking_ = true;
 
@@ -81,7 +82,7 @@ void SdtCore::__InitCheckReq(CheckIPPorts& _longlink_items, CheckIPPorts& _short
 
     if (MODE_BASIC(_mode)) {
         PingChecker* ping_checker = new PingChecker();
-        check_list_.push_back(ping_checker);
+        check_list_.push_back(ping_checker);//hzy sdt: 3.2
         DnsChecker* dns_checker = new DnsChecker();
         check_list_.push_back(dns_checker);
     }
@@ -117,19 +118,19 @@ void SdtCore::__Reset() {
     checking_ = false;
 }
 
-void SdtCore::__RunOn() {
+void SdtCore::__RunOn() {//hzy sdt: 1.3 //hzy sdt: 3.4
     xinfo_function();
-
+    
     for (std::list<BaseChecker*>::iterator iter = check_list_.begin(); iter != check_list_.end(); ++iter) {
         if (cancel_ || check_request_.check_status == kCheckFinish)
             break;
 
-        (*iter)->StartDoCheck(check_request_);
+        (*iter)->StartDoCheck(check_request_);//hzy sdt: 3.4.x
     }
 
     xinfo2(TSF"all checkers end! cancel_=%_, check_request_.check_status_=%_, check_list__size=%_", cancel_, check_request_.check_status, check_list_.size());
 
-    __DumpCheckResult();
+    __DumpCheckResult();//hzy sdt: 3.5
     __Reset();
 
 }
@@ -153,7 +154,7 @@ void SdtCore::__DumpCheckResult() {
         	break;
         }
     }
-    ReportNetCheckResult(check_request_.checkresult_profiles);
+    ReportNetCheckResult(check_request_.checkresult_profiles);//hzy sdt: 3.6
 }
 
 void SdtCore::CancelCheck() {

@@ -16,6 +16,11 @@
  *  Created on: 2016年3月3日
  *      Author: caoshaokun
  */
+/**
+    app-mac:
+    定义了c函数指针，通过指针和setCallback，将调用指向实现者
+ */
+
 
 #ifndef APPCOMM_INTERFACE_APPCOMM_H_
 #define APPCOMM_INTERFACE_APPCOMM_H_

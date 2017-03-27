@@ -61,28 +61,7 @@ static const std::string kLibName = "stn";
     {\
     	ret = stn_ptr->func;\
     }
-#pragma mark -
-    
-    static void __initbind_baseprjevent() {
-        
-#ifdef ANDROID
-        mars::baseevent::addLoadModule(kLibName);
-#endif
-        //hzy: 2.2. connect signals
-        GetSignalOnCreate().connect(&onCreate);
-        GetSignalOnDestroy().connect(&onDestroy);
-        GetSignalOnSingalCrash().connect(&onSingalCrash);
-        GetSignalOnExceptionCrash().connect(&onExceptionCrash);
-        GetSignalOnNetworkChange().connect(&onNetworkChange);
-        
-#ifndef XLOGGER_TAG
-#error "not define XLOGGER_TAG"
-#endif
-        
-        GetSignalOnNetworkDataChange().connect(&OnNetworkDataChange);
-    }
-    
-BOOT_RUN_STARTUP(__initbind_baseprjevent);//hzy: 2.1 static
+
     
  #pragma mark -
     
@@ -148,7 +127,28 @@ static void OnNetworkDataChange(const char* _tag, ssize_t _send, ssize_t _recv) 
 void Callback::TrafficData(ssize_t _send, ssize_t _recv) {
     xassert2(false);
 }
+#pragma mark -
     
+    static void __initbind_baseprjevent() {
+        
+#ifdef ANDROID
+        mars::baseevent::addLoadModule(kLibName);
+#endif
+        //hzy: 2.2. connect signals
+        GetSignalOnCreate().connect(&onCreate);
+        GetSignalOnDestroy().connect(&onDestroy);
+        GetSignalOnSingalCrash().connect(&onSingalCrash);
+        GetSignalOnExceptionCrash().connect(&onExceptionCrash);
+        GetSignalOnNetworkChange().connect(&onNetworkChange);
+        
+#ifndef XLOGGER_TAG
+#error "not define XLOGGER_TAG"
+#endif
+        
+        GetSignalOnNetworkDataChange().connect(&OnNetworkDataChange);
+    }
+    
+    BOOT_RUN_STARTUP(__initbind_baseprjevent);//hzy: 2.1 static
 #pragma mark -  Callback
 std::vector<std::string> Callback::OnNewDns(const std::string& host) {
     xassert2(false);
@@ -157,7 +157,7 @@ std::vector<std::string> Callback::OnNewDns(const std::string& host) {
 }
 
 void SetCallback(Callback* const callback) {
-	sg_callback = callback;  //hzy: 4.1 callback 
+	sg_callback = callback;
 }
 #pragma mark - netcore
 void StartTask (const Task& _task) {
@@ -277,19 +277,19 @@ void network_export_symbols_0(){}
 		sg_callback->OnPush(cmdid, msgpayload);
 	}
 	//底层获取task要发送的数据
-	bool Req2Buf(int32_t taskid,  void* const user_context, AutoBuffer& outbuffer, int& error_code, const int channel_select) { //hzy: 4.3
+	bool Req2Buf(int32_t taskid,  void* const user_context, AutoBuffer& outbuffer, int& error_code, const int channel_select) { //hzy: 4.6
 		xassert2(sg_callback != NULL);
-		return sg_callback->Req2Buf(taskid, user_context, outbuffer, error_code, channel_select);
+		return sg_callback->Req2Buf(taskid, user_context, outbuffer, error_code, channel_select);//hzy: 4.7
 	}
 	//底层回包返回给上层解析
-	int Buf2Resp(int32_t taskid, void* const user_context, const AutoBuffer& inbuffer, int& error_code, const int channel_select) {
+	int Buf2Resp(int32_t taskid, void* const user_context, const AutoBuffer& inbuffer, int& error_code, const int channel_select) {//hzy: 4.11
 		xassert2(sg_callback != NULL);
 		return sg_callback->Buf2Resp(taskid, user_context, inbuffer, error_code, channel_select);
 	}
 	//任务执行结束
-	int  OnTaskEnd(int32_t taskid, void* const user_context, int error_type, int error_code) {
+	int  OnTaskEnd(int32_t taskid, void* const user_context, int error_type, int error_code) {//hzy: 4.23
 		xassert2(sg_callback != NULL);
-		return sg_callback->OnTaskEnd(taskid, user_context, error_type, error_code);
+		return sg_callback->OnTaskEnd(taskid, user_context, error_type, error_code);//hzy: 4.24
 	}
 	//上报流量数据
 	void ReportFlow(int32_t wifi_recv, int32_t wifi_send, int32_t mobile_recv, int32_t mobile_send) {
@@ -297,7 +297,7 @@ void network_export_symbols_0(){}
 		sg_callback->ReportFlow(wifi_recv, wifi_send, mobile_recv, mobile_send);
 	}
 	//上报网络连接状态
-	void ReportConnectStatus(int status, int longlink_status) {
+	void ReportConnectStatus(int status, int longlink_status) {//hzy: 4.14
 		xassert2(sg_callback != NULL);
 		sg_callback->ReportConnectStatus(status, longlink_status);
 	}

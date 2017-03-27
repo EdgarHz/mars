@@ -28,7 +28,7 @@
 namespace mars {
     namespace stn {
         
-class StnCallBack : public Callback { //hzy: 4.1 callback
+class StnCallBack : public Callback { 
     
 private:
     StnCallBack() {}

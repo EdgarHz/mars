@@ -112,7 +112,8 @@ static const int64_t kTimeDeviation = 500;
 static bool iOS_style = false;
 
 static void __anr_checker_thread() {
-    while (true) {
+    //hzy: 1.1.8
+    while (true) {//hzy: 1.1.9 循环体
         ScopedLock lock(sg_mutex);
 
     	uint64_t round_tick_start = clock_app_monotonic();
@@ -153,14 +154,14 @@ static void __anr_checker_thread() {
         if (iOS_style) {
             if (!sg_check_heap.empty() && (uint64_t)sg_check_heap.front().timeout <= sg_check_heap.front().used_cpu_time) {
                 check_hit = true;
-                GetSignalCheckHit()(true);
+                GetSignalCheckHit()(true);//hzy: 1.1.10
                 xassert2(sg_check_heap.front().end_time <= clock_app_monotonic(),
                          "end_time:%" PRIu64", now:%" PRIu64", anr_checker_size:%d, @%p", sg_check_heap.front().end_time, clock_app_monotonic(), (int)sg_check_heap.size(), (void*)sg_check_heap.front().ptr); //old logic is strict than new logic
             }
         } else {
             if (!sg_check_heap.empty()  && sg_check_heap.front().end_time <= clock_app_monotonic()) {
                 check_hit = true;
-                GetSignalCheckHit()(false);
+                GetSignalCheckHit()(false);//hzy: 1.1.10
             }
         }
 
@@ -178,12 +179,11 @@ static void __anr_checker_thread() {
         }
     }
 }
-
-static Thread              sg_thread(&__anr_checker_thread);//hzy: 1.2, static thread
+static Thread              sg_thread(&__anr_checker_thread);//hzy: 1.0.1, static thread
 static class startup {
   public:
     startup() {
-        sg_thread.start();//hzy: 1.4, static  default run.
+        sg_thread.start();//hzy: 1.1.2. 如果还没有启动，检查并启动
     }
 
     ~startup() {
@@ -194,7 +194,7 @@ static class startup {
 
         sg_thread.join();
     }
-} __startup; //hzy: 1.1, static instance.
+} __startup;//hzy: 1.1.1  静态类对象，调用startup()方法
 }  // namespace
 
 #endif

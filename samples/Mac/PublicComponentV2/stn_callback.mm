@@ -54,7 +54,7 @@ std::vector<std::string> StnCallBack::OnNewDns(const std::string& _host) {
 void StnCallBack::OnPush(int32_t _cmdid, const AutoBuffer& _msgpayload) {
 }
 
-bool StnCallBack::Req2Buf(int32_t _taskid, void* const _user_context, AutoBuffer& _outbuffer, int& _error_code, const int _channel_select) { //hzy: 4.4
+bool StnCallBack::Req2Buf(int32_t _taskid, void* const _user_context, AutoBuffer& _outbuffer, int& _error_code, const int _channel_select) { //hzy: 4.7
     NSData* requestData =  [[NetworkService sharedInstance] Request2BufferWithTaskID:_taskid userContext:_user_context];
     if (requestData == nil) {
         requestData = [[NSData alloc] init];
@@ -78,8 +78,8 @@ int StnCallBack::Buf2Resp(int32_t _taskid, void* const _user_context, const Auto
 }
 
 int  StnCallBack::OnTaskEnd(int32_t _taskid, void* const _user_context, int _error_type, int _error_code) {
-    
-    return (int)[[NetworkService sharedInstance] OnTaskEndWithTaskID:_taskid userContext:_user_context errType:_error_type errCode:_error_code];
+    //hzy: 4.24
+    return (int)[[NetworkService sharedInstance] OnTaskEndWithTaskID:_taskid userContext:_user_context errType:_error_type errCode:_error_code];//hzy: 4.25
 
 }
 

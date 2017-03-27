@@ -40,7 +40,7 @@ class BaseChecker;
 
 class SdtCore {
   public:
-    SINGLETON_INTRUSIVE(SdtCore, new SdtCore, delete);
+    SINGLETON_INTRUSIVE(SdtCore, new SdtCore, delete);//hzy sdt: 1.1
 
   public:
 

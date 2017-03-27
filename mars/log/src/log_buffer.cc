@@ -27,7 +27,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "log/crypt/log_crypt.h"
+#include "log/crypt/log_crypt.h" //hzy log: 这里引用的文件并没有出现在工程中。坑爹呢准备
 
 
 #ifdef WIN32
