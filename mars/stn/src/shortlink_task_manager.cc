@@ -289,7 +289,6 @@ void ShortLinkTaskManager::__RunOnStartTask() {
 		first->current_dyntime_status = (first->task.server_process_cost <= 0) ? dynamic_timeout_.GetStatus() : kEValuating;
 		first->transfer_profile.read_write_timeout = __ReadWriteTimeout(first->transfer_profile.first_pkg_timeout);
 		first->transfer_profile.send_data_size = bufreq.Length();
-
         first->use_proxy =  (first->remain_retry_count == 0 && first->task.retry_count > 0) ? !default_use_proxy_ : default_use_proxy_;
         ShortLinkInterface* worker = ShortLinkChannelFactory::Create(MessageQueue::Handler2Queue(asyncreg_.Get()), net_source_, first->task.shortlink_host_list, first->task.cgi, first->task.taskid, first->use_proxy);
         worker->OnSend = boost::bind(&ShortLinkTaskManager::__OnSend, this, _1);

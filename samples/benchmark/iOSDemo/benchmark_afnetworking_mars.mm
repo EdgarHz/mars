@@ -19,12 +19,23 @@
 
 #import <Foundation/Foundation.h>
 #import "benchmark_afnetworking_mars.h"
-#import "Main.pb.h"
+#import "Main.pbobjc.h"
 #import "CgiTask.h"
 #import "NetworkService.h"
 #import "CommandId.h"
 #import "LogUtil.h"
 #import "AFNetworking/AFNetworking.h"
+
+#define kSayHello2 2
+#define USE_Self_Server 1
+#if USE_Self_Server
+
+    #define ServerAddressAndPort @"192.168.1.104:3000" //@"118.89.24.72:8080"
+    #define ServerAddress @"192.168.1.104" //@"118.89.24.72"
+#else
+    #define ServerAddressAndPort @"118.89.24.72:8080"
+    #define ServerAddress @"118.89.24.72"
+#endif
 
 @interface AFProtobufRequestSerializer : AFHTTPRequestSerializer
 @end
@@ -102,14 +113,21 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     AFHTTPSessionManager* manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFProtobufRequestSerializer serializer];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-
+#if USE_Self_Server
+    [manager.requestSerializer setValue:@"text/html" forHTTPHeaderField:@"Content-Type"];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream",@"text/html", nil];
+#else
     [manager.requestSerializer setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream", nil];
-
+#endif
+    
     //Benchmark scene: 64KB,128KB request test
     //HelloRequest* helloRequest = [[[[[HelloRequest builder] setUser:@"afnetworking"] setText:@"hello afnetworking"] setDumpContent:[self makeDumpData:128*1024]] build];
-    HelloRequest* helloRequest = [[[[HelloRequest builder] setUser:@"afnetworking"] setText:@"hello afnetworking"] build];
-    [manager POST:@"http://118.89.24.72:8080/mars/hello2" parameters:[helloRequest data] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSString* url = [NSString stringWithFormat:@"http://%@/mars/hello2", ServerAddressAndPort];
+    HelloRequest *helloRequest = [HelloRequest new];
+    helloRequest.user = @"afnetworking";
+    helloRequest.text = @"Hello world";
+    [manager POST:url parameters:[helloRequest data] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSData* data = (NSData*)responseObject;
         [self onTaskEnd:true data:data];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -130,7 +148,7 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     else
         NSLog(@"benchmark afnetworking fail cnt:%llu, cost:%llu", task_cnt, cost);
     
-    if((task_suc%50) == 0) {
+    if(task_suc!= 0 && (task_suc%50) == 0) {
         UInt64 curr = [[NSDate date] timeIntervalSince1970] * 1000;
         NSLog(@"benchmark afnetworking total:%llu, avg:%llu, suc_rate:%f, suc_cnt:%llu, count:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc, task_cnt);
     }
@@ -144,14 +162,14 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     [self doAFNetworking];
 }
 
+
 -(void) StartMarsTest {
     scene = SceneMars;
     NSLog(@"benchmark mars start");
-    
     start_time = [[NSDate date] timeIntervalSince1970] * 1000;
     task_time = [[NSDate date] timeIntervalSince1970] * 1000;
     task_cnt = task_suc = suc_time = 0;
-    CGITask *helloCGI = [[CGITask alloc] initAll:ChannelType_ShortConn AndCmdId:kSayHello2 AndCGIUri:@"/mars/hello2" AndHost:@"118.89.24.72"];
+    CGITask *helloCGI = [[CGITask alloc] initAll:ChannelType_ShortConn AndCmdId:kSayHello2 AndCGIUri:@"/mars/hello2" AndHost:ServerAddress];
     [[NetworkService sharedInstance] startTask:helloCGI ForUI:self];
 }
 
@@ -181,14 +199,16 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     }
     
     task_time = [[NSDate date] timeIntervalSince1970] * 1000;
-    CGITask *helloCGI = [[CGITask alloc] initAll:ChannelType_ShortConn AndCmdId:kSayHello2 AndCGIUri:@"/mars/hello2" AndHost:@"118.89.24.72"];
+    CGITask *helloCGI = [[CGITask alloc] initAll:ChannelType_ShortConn AndCmdId:kSayHello2 AndCGIUri:@"/mars/hello2" AndHost:ServerAddress];
     [[NetworkService sharedInstance] startTask:helloCGI ForUI:self];
     
     return 0;
 }
 
 -(NSData*)requestSendData {
-    HelloRequest* helloRequest = [[[[HelloRequest builder] setUser:@"anonymous"] setText:@"Hello world!"] build];
+    HelloRequest *helloRequest = [HelloRequest new];
+    helloRequest.user = @"anonymous";
+    helloRequest.text = @"Hello world";
     //Benchmark scene: 64KB,128KB request test
     //HelloRequest* helloRequest = [[[[[HelloRequest builder] setUser:@"mars"] setText:@"Hello mars!"] setDumpContent:[self makeDumpData:128*1024]] build];
     NSData* data = [helloRequest data];
@@ -216,7 +236,8 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager.requestSerializer setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream", nil];
-    [manager POST:@"http://118.89.24.72:8080/mars/hello2" parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    NSString* url = [NSString stringWithFormat:@"http://%@/mars/hello2", ServerAddressAndPort];
+    [manager POST:url parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"benchmark afnetworking suc:%f", ([[NSDate date] timeIntervalSince1970] * 1000 - time));
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"benchmark afnetworking fail:%f", ([[NSDate date] timeIntervalSince1970] * 1000 - time));
@@ -228,3 +249,5 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
 }
 
 @end
+
+

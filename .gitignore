@@ -6,6 +6,8 @@
 build/
 /mars/captures
 obj/
+Pods/
+/samples/benchmark/*/*/MarsLib/
 
 *.swp
 *.pyc
