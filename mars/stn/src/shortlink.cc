@@ -68,7 +68,7 @@ class ShortLinkConnectObserver : public MComplexConnect {
         ConnectingIndex[_index] = 0;
 
         if (0 == _error) {
-            xassert2(-1 == index_, "index_:%d", index_);
+            xassert2(-1 == index_ ||(index_ > 0 && _index == 0), "index_:%d", index_);
             index_ = _index;
         } else {
             xassert2(shortlink_.func_network_report);

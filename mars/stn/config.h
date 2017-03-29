@@ -35,7 +35,7 @@
 #define USE_LONG_LINK
 //task attribute max value
 #define DEF_TASK_TIME_OUT (60*1000)
-#define DEF_TASK_RETRY_COUNT (1)
+#define DEF_TASK_RETRY_COUNT (-1)
 #define DEF_TASK_RETRY_INTERNAL (1 * 1000)
 
 // Heartbeart Range
@@ -112,6 +112,6 @@ const static unsigned int kLonglinkConnMax = 3;
 
 //shortlink connect params
 const static unsigned int kShortlinkConnTimeout = 10 * 1000;
-const static unsigned int kShortlinkConnInterval = 4 * 1000;
+const static unsigned int kShortlinkConnInterval = 0;//4 * 1000;
 
 #endif /* stn_config_h */

@@ -20,13 +20,39 @@
                     <view key="view" contentMode="scaleToFill" id="tkL-NI-oj8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RiW-De-13i">
+                                <rect key="frame" x="229" y="445" width="88" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="RunMar"/>
+                                <connections>
+                                    <action selector="onRunMar:" destination="mPd-nu-zwd" eventType="touchUpInside" id="ONl-PI-2dp"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rt9-8U-Lid">
+                                <rect key="frame" x="69" y="445" width="82" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="RunAF"/>
+                                <connections>
+                                    <action selector="onRunAF:" destination="mPd-nu-zwd" eventType="touchUpInside" id="yCg-gS-GmQ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J7m-ca-7Xy">
+                                <rect key="frame" x="87" y="495" width="184" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="RunSensitivity"/>
+                                <connections>
+                                    <action selector="onRunSensitivity:" destination="mPd-nu-zwd" eventType="touchUpInside" id="ruq-Pl-VuQ"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Benchmark" id="Fte-up-rBJ"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bva-3W-lNT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-625" y="-810"/>
+            <point key="canvasLocation" x="-626.39999999999998" y="-810.0449775112445"/>
         </scene>
         <!--PingServer-->
         <scene sceneID="HUD-s9-oN2">

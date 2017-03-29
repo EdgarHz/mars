@@ -30,8 +30,8 @@
 #define USE_Self_Server 1
 #if USE_Self_Server
 
-    #define ServerAddressAndPort @"192.168.1.104:3000" //@"118.89.24.72:8080"
-    #define ServerAddress @"192.168.1.104" //@"118.89.24.72"
+    #define ServerAddressAndPort @"192.168.2.1:3000" //@"118.89.24.72:8080"
+    #define ServerAddress @"192.168.2.1" //@"118.89.24.72"
 #else
     #define ServerAddressAndPort @"118.89.24.72:8080"
     #define ServerAddress @"118.89.24.72"
@@ -112,11 +112,13 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     
     AFHTTPSessionManager* manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFProtobufRequestSerializer serializer];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+   
 #if USE_Self_Server
+     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager.requestSerializer setValue:@"text/html" forHTTPHeaderField:@"Content-Type"];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream",@"text/html", nil];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream",@"text/html",@"application/json", nil];
 #else
+     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager.requestSerializer setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream", nil];
 #endif
@@ -165,6 +167,7 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
 
 -(void) StartMarsTest {
     scene = SceneMars;
+    
     NSLog(@"benchmark mars start");
     start_time = [[NSDate date] timeIntervalSince1970] * 1000;
     task_time = [[NSDate date] timeIntervalSince1970] * 1000;
@@ -234,8 +237,14 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     AFHTTPSessionManager* manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+#if USE_Self_Server
+    [manager.requestSerializer setValue:@"text/html" forHTTPHeaderField:@"Content-Type"];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream",@"text/html",@"application/json", nil];
+#else
     [manager.requestSerializer setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream", nil];
+#endif
+    
     NSString* url = [NSString stringWithFormat:@"http://%@/mars/hello2", ServerAddressAndPort];
     [manager POST:url parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"benchmark afnetworking suc:%f", ([[NSDate date] timeIntervalSince1970] * 1000 - time));
@@ -244,7 +253,7 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     }];
     
     task_time = [[NSDate date] timeIntervalSince1970] * 1000;
-    CGITask *helloCGI = [[CGITask alloc] initAll:ChannelType_ShortConn AndCmdId:kSayHello2 AndCGIUri:@"/mars/hello2" AndHost:@"118.89.24.72"];
+    CGITask *helloCGI = [[CGITask alloc] initAll:ChannelType_ShortConn AndCmdId:kSayHello2 AndCGIUri:@"/mars/hello2" AndHost: ServerAddress];
     [[NetworkService sharedInstance] startTask:helloCGI ForUI:self];
 }
 

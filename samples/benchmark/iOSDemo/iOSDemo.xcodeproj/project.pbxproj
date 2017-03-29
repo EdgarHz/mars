@@ -455,9 +455,9 @@
 				1FB576FD1CE209A500ADCF8C /* Assets.xcassets */,
 				1FB576FF1CE209A500ADCF8C /* LaunchScreen.storyboard */,
 				1FB577021CE209A500ADCF8C /* Info.plist */,
+				44DC8A101E89190A008E68D1 /* BenchmarkViewController.h */,
 				1FB576F11CE209A500ADCF8C /* Supporting Files */,
 				1F7626BA1E12A9E9000A4AE6 /* Constants.h */,
-				44DC8A101E89190A008E68D1 /* BenchmarkViewController.h */,
 				44DC8A111E89190A008E68D1 /* BenchmarkViewController.m */,
 			);
 			path = iOSDemo;

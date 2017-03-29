@@ -15,20 +15,25 @@
 @end
 
 @implementation BenchmarkViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     benchmark = [[BenchMark alloc] init];
-//    [benchmark StartAfnetworkingTest];
-    [benchmark StartMarsTest];
-    // Do any additional setup after loading the view.
+//
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
-
+- (IBAction)onRunAF:(id)sender {
+    [benchmark StartAfnetworkingTest];
+}
+- (IBAction)onRunMar:(id)sender {
+    [benchmark StartMarsTest];
+}
+- (IBAction)onRunSensitivity:(id)sender {
+    [benchmark StartSensitivityTest];
+}
 /*
 #pragma mark - Navigation
 

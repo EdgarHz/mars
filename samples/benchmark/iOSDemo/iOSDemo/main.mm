@@ -40,13 +40,13 @@ int main(int argc, char * argv[]) {
         
 //        // init xlog
 #if DEBUG
-        xlogger_SetLevel(kLevelError);
+        xlogger_SetLevel(kLevelDebug);
         appender_set_console_log(true);
 #else
         xlogger_SetLevel(kLevelInfo);
         appender_set_console_log(false);
 #endif
-        appender_open(kAppednerAsync, [logPath UTF8String], "Test");
+//        appender_open(kAppednerAsync, [logPath UTF8String], "Test");
 //        
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }
