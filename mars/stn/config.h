@@ -35,7 +35,7 @@
 #define USE_LONG_LINK
 //task attribute max value
 #define DEF_TASK_TIME_OUT (60*1000)
-#define DEF_TASK_RETRY_COUNT (-1)
+#define DEF_TASK_RETRY_COUNT (1)
 #define DEF_TASK_RETRY_INTERNAL (1 * 1000)
 
 // Heartbeart Range

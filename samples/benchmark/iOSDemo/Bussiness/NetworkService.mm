@@ -118,6 +118,7 @@ static NetworkService * sharedSingleton = nil;
     ctask.shortlink_host_list.push_back(std::string(task.host.UTF8String));
     ctask.user_context = (__bridge void*)task;
     ctask.limit_frequency = false;
+    ctask.retry_count = 4;
     mars::stn::StartTask(ctask);
     
     NSString *taskIdKey = [NSString stringWithFormat:@"%d", ctask.taskid];

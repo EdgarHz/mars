@@ -91,10 +91,10 @@ inline  static bool __ValidAndInitDefault(Task& _task, XLogger& _group) {
         }
     }
     
-//    if (0 >  _task.retry_count) {
-//        _task.retry_count = DEF_TASK_RETRY_COUNT;
-//    }
-//    
+    if (0 >  _task.retry_count) {
+        _task.retry_count = DEF_TASK_RETRY_COUNT;
+    }
+    
     return true;
 }
 
