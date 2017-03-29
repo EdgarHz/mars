@@ -2,45 +2,144 @@
 2017-03-29 15:04:37.792628 iOSDemo[3875:2182794] start sensitivity test
 2017-03-29 15:04:42.838636 iOSDemo[3875:2182794] benchmark afnetworking suc:5046.567871
 2017-03-29 15:04:42.846313 iOSDemo[3875:2182862] benchmark mars errtype:0, errcode:0, cost:5051.252930
+af - mars = -5
+2017-03-29 15:35:20.396868 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:35:27.474160 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:7074.812988
+2017-03-29 15:35:27.476085 iOSDemo[3944:2189756] benchmark afnetworking suc:7079.046143
+af - mars = 5
+2017-03-29 15:35:55.442153 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:36:02.503378 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:7059.312988
+2017-03-29 15:36:02.508130 iOSDemo[3944:2189756] benchmark afnetworking suc:7066.084961
+af - mars = 7
+
 
 10s
 2017-03-29 15:05:00.177521 iOSDemo[3875:2182794] start sensitivity test
 2017-03-29 15:05:11.256917 iOSDemo[3875:2182862] benchmark mars errtype:0, errcode:0, cost:11077.843994
 2017-03-29 15:05:11.261078 iOSDemo[3875:2182794] benchmark afnetworking suc:11084.034912
+af - mars = 7
+2017-03-29 15:36:25.460985 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:36:36.546828 iOSDemo[3944:2189756] benchmark afnetworking suc:11085.737061
+2017-03-29 15:36:37.530867 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:12067.787842
+af - mars = -982
+2017-03-29 15:36:55.814086 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:37:06.860713 iOSDemo[3944:2189756] benchmark afnetworking suc:11046.651855
+2017-03-29 15:37:06.894364 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:11078.285889
+af - mars = -32
+
+
 
 15s
 2017-03-29 15:05:25.778360 iOSDemo[3875:2182794] start sensitivity test
 2017-03-29 15:05:40.855563 iOSDemo[3875:2182862] benchmark mars errtype:0, errcode:0, cost:15075.490967
 2017-03-29 15:05:44.831020 iOSDemo[3875:2182794] benchmark afnetworking suc:19052.955078
+af - mars = 3975
+2017-03-29 15:38:20.818569 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:38:34.941696 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:14121.619873
+2017-03-29 15:38:39.881429 iOSDemo[3944:2189756] benchmark afnetworking suc:19063.366943
+af - mars = 4942
+2017-03-29 15:38:55.504297 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:39:11.627323 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:16121.248047
+2017-03-29 15:39:14.590565 iOSDemo[3944:2189756] benchmark afnetworking suc:19086.500000
+af - mars = 2965
+
+
 
 20s
 2017-03-29 15:12:29.623531 iOSDemo[3895:2184398] start sensitivity test
 2017-03-29 15:12:51.768749 iOSDemo[3895:2184446] benchmark mars errtype:0, errcode:0, cost:22137.676025
 2017-03-29 15:13:04.762827 iOSDemo[3895:2184398] benchmark afnetworking suc:35139.763916
-
+af - mars = 13002
 2017-03-29 15:16:40.622503 iOSDemo[3895:2184398] start sensitivity test
 2017-03-29 15:17:02.746343 iOSDemo[3895:2184446] benchmark mars errtype:0, errcode:0, cost:22122.268066
 2017-03-29 15:17:15.681508 iOSDemo[3895:2184398] benchmark afnetworking suc:35059.445068
+af - mars = 12937
+2017-03-29 15:40:10.409100 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:40:32.556752 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:22145.675049
+2017-03-29 15:40:45.513045 iOSDemo[3944:2189756] benchmark afnetworking suc:35103.979004
+af - mars = 12958
+
+
+
+25s
+2017-03-29 15:33:51.123215 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:34:17.259702 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:26128.625977
+2017-03-29 15:34:26.243479 iOSDemo[3944:2189756] benchmark afnetworking suc:35120.421143
+af - mars = 8992
+2017-03-29 15:41:10.629878 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:41:35.764292 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:25133.175049
+2017-03-29 15:41:45.682215 iOSDemo[3944:2189756] benchmark afnetworking suc:35052.151123
+af - mars = 9919
+2017-03-29 15:42:05.433498 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:42:30.544867 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:25109.793213
+2017-03-29 15:42:40.491734 iOSDemo[3944:2189756] benchmark afnetworking suc:35058.667969
+af - mars = 9949
 
 
 30s
 2017-03-29 15:15:20.632762 iOSDemo[3895:2184398] start sensitivity test
 2017-03-29 15:15:53.790262 iOSDemo[3895:2184446] benchmark mars errtype:0, errcode:0, cost:33156.185059
 2017-03-29 15:15:55.691475 iOSDemo[3895:2184398] benchmark afnetworking suc:35058.411865
+af - mars = 1902
+
+2017-03-29 15:43:55.491684 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:44:28.625192 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:33132.113037
+2017-03-29 15:44:30.548562 iOSDemo[3944:2189756] benchmark afnetworking suc:35057.499023
+af - mars = 1925
+2017-03-29 15:45:05.446269 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:45:38.574107 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:33125.878906
+2017-03-29 15:45:40.517188 iOSDemo[3944:2189756] benchmark afnetworking suc:35071.124023
+af - mars = 1946
+
+
 
 35s
 2017-03-29 15:13:45.961099 iOSDemo[3895:2184398] start sensitivity test
 2017-03-29 15:14:20.118609 iOSDemo[3895:2184446] benchmark mars errtype:0, errcode:0, cost:34155.533203
 2017-03-29 15:14:21.029671 iOSDemo[3895:2184398] benchmark afnetworking suc:35068.607178
+af - mars = 913
+2017-03-29 15:46:00.448620 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:46:35.520137 iOSDemo[3944:2189756] benchmark afnetworking suc:35072.070068
+2017-03-29 15:46:35.612946 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:35162.874023
+af - mars = 90
+2017-03-29 15:46:55.402151 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:47:30.478362 iOSDemo[3944:2189756] benchmark afnetworking suc:35076.299072
+2017-03-29 15:47:30.528169 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:35124.095947
+af - mars = 48
+
 
 
 40s
 2017-03-29 15:19:50.350438 iOSDemo[3895:2184398] start sensitivity test
 2017-03-29 15:20:34.564388 iOSDemo[3895:2184446] benchmark mars errtype:0, errcode:0, cost:44212.311035
 2017-03-29 15:20:50.624748 iOSDemo[3895:2184398] benchmark afnetworking fail:60274.693848
+af - mars = failed
 
+2017-03-29 15:48:10.424065 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:48:54.601477 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:44175.400879
+2017-03-29 15:49:10.717619 iOSDemo[3944:2189756] benchmark afnetworking fail:60293.564209
+af - mars = failed
+2017-03-29 15:49:30.687077 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:50:11.840618 iOSDemo[3944:2189799] benchmark mars errtype:0, errcode:0, cost:41151.540039
+2017-03-29 15:50:30.927845 iOSDemo[3944:2189756] benchmark afnetworking fail:60240.791016
+af - mars = failed
 
 45s
 2017-03-29 15:18:21.028495 iOSDemo[3895:2184398] start sensitivity test
 2017-03-29 15:19:06.221035 iOSDemo[3895:2184446] benchmark mars errtype:0, errcode:0, cost:45190.953857
 2017-03-29 15:19:21.326354 iOSDemo[3895:2184398] benchmark afnetworking fail:60298.300049
+af - mars = 15108
+
+70s
+2017-03-29 15:50:50.825673 iOSDemo[3944:2189756] start sensitivity test
+2017-03-29 15:51:45.003773 iOSDemo[3944:2189799] benchmark mars errtype:4, errcode:-10087, cost:54176.693115
+2017-03-29 15:51:51.223872 iOSDemo[3944:2189756] benchmark afnetworking fail:60398.821045
+
+
+
+
+
+
+
+
+
