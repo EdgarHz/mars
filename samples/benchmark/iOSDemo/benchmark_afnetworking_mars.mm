@@ -125,37 +125,14 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     
     AFHTTPSessionManager* manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFProtobufRequestSerializer serializer];
-
-#if USE_Self_Server
-    manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", nil];
-#else
-    
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager.requestSerializer setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream", nil];
-#endif
-    
-    
-    HelloRequest *helloRequest = [HelloRequest new];
-    if (Testing_Data_Size <= 0){
-        helloRequest.user = @"afnetworking";
-        helloRequest.text = @"Hello world";
-    } else {
-        helloRequest.user = @"afnetworking";
-        helloRequest.text = self.kbDataString;
-    }
+  
+    NSData* data = [self requestSendDataWithUser:@"afnetworking"];
     NSString* url = [NSString stringWithFormat:@"http://%@/mars/hello2", ServerAddressAndPort];
     
-    id paras = nil;
-#if USE_Self_Server
-    paras = @{@"user":helloRequest.user, @"text":helloRequest.text};
-#else
-    paras = [helloRequest data];
-#endif
-    [manager POST:url parameters:paras progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager POST:url parameters:data progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSData* data = (NSData*)responseObject;
         [self onTaskEnd:true data:data];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -266,9 +243,9 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
 
     return string;
 }
--(NSData*)requestSendData {
+-(NSData*)requestSendDataWithUser:(NSString*)user {
     HelloRequest *helloRequest = [HelloRequest new];
-    helloRequest.user = @"anonymous";
+    helloRequest.user = user;
     if (Testing_Data_Size <= 0){
         helloRequest.text = @"Hello world";
     } else {
@@ -278,6 +255,9 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     //HelloRequest* helloRequest = [[[[[HelloRequest builder] setUser:@"mars"] setText:@"Hello mars!"] setDumpContent:[self makeDumpData:128*1024]] build];
     NSData* data = [helloRequest data];
     return data;
+}
+-(NSData*)requestSendData {
+    return [self requestSendDataWithUser:@"mars"];
 }
 
 -(int)onPostDecode:(NSData*)responseData {
@@ -299,14 +279,9 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     AFHTTPSessionManager* manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-#if USE_Self_Server
-    [manager.requestSerializer setValue:@"text/html" forHTTPHeaderField:@"Content-Type"];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream",@"text/html",@"application/json", nil];
-#else
     [manager.requestSerializer setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream", nil];
-#endif
-    
+
     NSString* url = [NSString stringWithFormat:@"http://%@/mars/hello2", ServerAddressAndPort];
     [manager POST:url parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"benchmark afnetworking suc:%f", ([[NSDate date] timeIntervalSince1970] * 1000 - time));
