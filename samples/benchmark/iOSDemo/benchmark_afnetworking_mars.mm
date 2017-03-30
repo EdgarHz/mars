@@ -27,11 +27,14 @@
 #import "AFNetworking/AFNetworking.h"
 
 #define kSayHello2 2
-#define USE_Self_Server 1
+
+#define Testing_Data_Size 0
+
+#define USE_Self_Server 0
 #if USE_Self_Server
 
-    #define ServerAddressAndPort @"192.168.2.1:3000" //@"118.89.24.72:8080"
-    #define ServerAddress @"192.168.2.1" //@"118.89.24.72"
+    #define ServerAddressAndPort @"192.168.1.102:3000" //@"118.89.24.72:8080"
+    #define ServerAddress @"192.168.1.102" //@"118.89.24.72"
 #else
     #define ServerAddressAndPort @"118.89.24.72:8080"
     #define ServerAddress @"118.89.24.72"
@@ -71,6 +74,7 @@
 @property (nonatomic) uint32_t scene;
 @property (nonatomic) int32_t trycnt;
 
+@property (nonatomic) NSString* kbDataString;
 @end
 
 @implementation BenchMark
@@ -106,34 +110,61 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     
     [self doAFNetworking];
 }
-
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        if (Testing_Data_Size > 0 ) {
+            self.kbDataString = [self stringWithKbSize:Testing_Data_Size];
+        }
+    }
+    return self;
+}
 -(void) doAFNetworking {
     task_time = [[NSDate date] timeIntervalSince1970] * 1000;
     
     AFHTTPSessionManager* manager = [AFHTTPSessionManager manager];
     manager.requestSerializer = [AFProtobufRequestSerializer serializer];
-   
+
 #if USE_Self_Server
-     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    [manager.requestSerializer setValue:@"text/html" forHTTPHeaderField:@"Content-Type"];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream",@"text/html",@"application/json", nil];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", nil];
 #else
-     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager.requestSerializer setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/octet-stream", nil];
 #endif
     
-    //Benchmark scene: 64KB,128KB request test
-    //HelloRequest* helloRequest = [[[[[HelloRequest builder] setUser:@"afnetworking"] setText:@"hello afnetworking"] setDumpContent:[self makeDumpData:128*1024]] build];
-    NSString* url = [NSString stringWithFormat:@"http://%@/mars/hello2", ServerAddressAndPort];
+    
     HelloRequest *helloRequest = [HelloRequest new];
-    helloRequest.user = @"afnetworking";
-    helloRequest.text = @"Hello world";
-    [manager POST:url parameters:[helloRequest data] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    if (Testing_Data_Size <= 0){
+        helloRequest.user = @"afnetworking";
+        helloRequest.text = @"Hello world";
+    } else {
+        helloRequest.user = @"afnetworking";
+        helloRequest.text = self.kbDataString;
+    }
+    NSString* url = [NSString stringWithFormat:@"http://%@/mars/hello2", ServerAddressAndPort];
+    
+    id paras = nil;
+#if USE_Self_Server
+    paras = @{@"user":helloRequest.user, @"text":helloRequest.text};
+#else
+    paras = [helloRequest data];
+#endif
+    [manager POST:url parameters:paras progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSData* data = (NSData*)responseObject;
         [self onTaskEnd:true data:data];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [self onTaskEnd:false data:nil];
+        if (error.code == -1016){
+            [self onTaskEnd:true data:nil];
+        } else {
+            [self onTaskEnd:false data:nil];
+        }
+        
     }];
 }
 
@@ -153,6 +184,9 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     if(task_suc!= 0 && (task_suc%50) == 0) {
         UInt64 curr = [[NSDate date] timeIntervalSince1970] * 1000;
         NSLog(@"benchmark afnetworking total:%llu, avg:%llu, suc_rate:%f, suc_cnt:%llu, count:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc, task_cnt);
+        if (Testing_Data_Size >= 0) {
+            return;
+        }
     }
     
     if(task_suc >= 500) {
@@ -195,6 +229,9 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     
     if((task_suc%50) == 0) {
         NSLog(@"benchmark mars total:%llu, avg:%llu, suc_rate:%f, suc:%llu, cnt:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc, task_cnt);
+        if (Testing_Data_Size >= 0) {
+            return 0;
+        }
     }
     if(task_suc >= 500) {
         NSLog(@"benchmark mars final total:%llu, avg:%llu, suc_rate:%f, suc:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc);
@@ -207,11 +244,36 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     
     return 0;
 }
+- (NSString*)stringWithKbSize:(int)kb {
+    int size = kb *1024;
+    NSMutableString *string = [NSMutableString stringWithCapacity:size];
+    //2^3
+    for(int i = 0; i < 8;i++){
+        [string appendFormat:@"%d",i];
+    }
+    //2^3 * 2^7
+    for(int i = 0; i < 7;i++){
+        [string appendFormat:@"%@",string];
+    }
 
+    //2^10 * kb
+    int i =1; int n = 1;
+    for (; n < kb;i++){
+        [string appendFormat:@"%@",string];
+        n = pow(2,i);
+        NSLog(@"%d %d",i,n);
+    }
+
+    return string;
+}
 -(NSData*)requestSendData {
     HelloRequest *helloRequest = [HelloRequest new];
     helloRequest.user = @"anonymous";
-    helloRequest.text = @"Hello world";
+    if (Testing_Data_Size <= 0){
+        helloRequest.text = @"Hello world";
+    } else {
+        helloRequest.text = self.kbDataString;
+    }
     //Benchmark scene: 64KB,128KB request test
     //HelloRequest* helloRequest = [[[[[HelloRequest builder] setUser:@"mars"] setText:@"Hello mars!"] setDumpContent:[self makeDumpData:128*1024]] build];
     NSData* data = [helloRequest data];

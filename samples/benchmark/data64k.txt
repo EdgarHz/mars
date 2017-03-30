@@ -1,0 +1,129 @@
+64k
+2017-03-30 11:16:40.385117 iOSDemo[347:59311] benchmark afnetworking start
+2017-03-30 11:16:42.818122 iOSDemo[347:59311] benchmark afnetworking total:2433, avg:48, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:16:49.972357 iOSDemo[347:59311] benchmark afnetworking start
+2017-03-30 11:16:51.828906 iOSDemo[347:59311] benchmark afnetworking total:1856, avg:37, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:16:55.606255 iOSDemo[347:59311] benchmark afnetworking start
+2017-03-30 11:16:58.311982 iOSDemo[347:59311] benchmark afnetworking total:2705, avg:54, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:17:03.886698 iOSDemo[347:59311] benchmark mars start
+2017-03-30 11:17:06.984913 iOSDemo[347:59355] benchmark mars total:3098, avg:61, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 11:17:09.186917 iOSDemo[347:59311] benchmark mars start
+2017-03-30 11:17:11.733901 iOSDemo[347:59355] benchmark mars total:2546, avg:50, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 11:17:14.172804 iOSDemo[347:59311] benchmark mars start
+2017-03-30 11:17:17.395934 iOSDemo[347:59355] benchmark mars total:3223, avg:64, suc_rate:1.000000, suc:50, cnt:50
+
+3g 64k
+2017-03-30 11:26:41.310925 iOSDemo[356:62336] benchmark afnetworking start
+2017-03-30 11:27:04.184256 iOSDemo[356:62336] benchmark afnetworking total:22873, avg:457, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:28:22.115938 iOSDemo[356:62336] benchmark afnetworking start
+2017-03-30 11:28:45.128690 iOSDemo[356:62336] benchmark afnetworking total:23012, avg:460, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:32:52.718276 iOSDemo[356:62336] benchmark afnetworking start
+2017-03-30 11:33:16.198601 iOSDemo[356:62336] benchmark afnetworking total:23480, avg:469, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:33:40.834960 iOSDemo[356:62336] benchmark mars start
+2017-03-30 11:34:10.573263 iOSDemo[356:62381] benchmark mars total:29738, avg:594, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 11:34:14.523898 iOSDemo[356:62336] benchmark mars start
+2017-03-30 11:34:44.034871 iOSDemo[356:62381] benchmark mars total:29510, avg:590, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 11:36:42.201238 iOSDemo[356:62336] benchmark mars start
+2017-03-30 11:37:11.384025 iOSDemo[356:62381] benchmark mars total:29182, avg:583, suc_rate:1.000000, suc:50, cnt:50
+
+
+128k
+2017-03-30 11:18:04.407613 iOSDemo[349:60060] benchmark afnetworking start
+2017-03-30 11:18:07.087033 iOSDemo[349:60060] benchmark afnetworking total:2679, avg:53, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:18:10.894675 iOSDemo[349:60060] benchmark afnetworking start
+2017-03-30 11:18:13.128574 iOSDemo[349:60060] benchmark afnetworking total:2234, avg:44, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:18:14.808258 iOSDemo[349:60060] benchmark afnetworking start
+2017-03-30 11:18:16.773176 iOSDemo[349:60060] benchmark afnetworking total:1965, avg:39, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:18:19.991740 iOSDemo[349:60060] benchmark mars start
+2017-03-30 11:18:22.383767 iOSDemo[349:60105] benchmark mars total:2392, avg:47, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 11:18:24.993907 iOSDemo[349:60060] benchmark mars start
+2017-03-30 11:18:27.518433 iOSDemo[349:60105] benchmark mars total:2524, avg:50, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 11:18:29.259080 iOSDemo[349:60060] benchmark mars start
+2017-03-30 11:18:31.843175 iOSDemo[349:60105] benchmark mars total:2584, avg:51, suc_rate:1.000000, suc:50, cnt:50
+
+
+
+3g 128k
+2017-03-30 11:19:50.630790 iOSDemo[349:60060] benchmark mars start
+2017-03-30 11:20:20.887431 iOSDemo[349:60105] benchmark mars total:30257, avg:605, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 11:20:25.816318 iOSDemo[349:60060] benchmark mars start
+2017-03-30 11:20:56.041729 iOSDemo[349:60105] benchmark mars total:30225, avg:604, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 11:21:03.751991 iOSDemo[349:60060] benchmark mars start
+2017-03-30 11:21:34.394759 iOSDemo[349:60105] benchmark mars total:30642, avg:612, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 11:21:37.589355 iOSDemo[349:60060] benchmark afnetworking start
+2017-03-30 11:22:01.054012 iOSDemo[349:60060] benchmark afnetworking total:23464, avg:469, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:24:13.433909 iOSDemo[349:60060] benchmark afnetworking start
+2017-03-30 11:24:36.447384 iOSDemo[349:60060] benchmark afnetworking total:23013, avg:460, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 11:25:18.688099 iOSDemo[349:60060] benchmark afnetworking start
+2017-03-30 11:25:41.754159 iOSDemo[349:60060] benchmark afnetworking total:23066, avg:461, suc_rate:1.000000, suc_cnt:50, count:50
+
+
+
+
+返回数据
+3g  64k
+2017-03-30 15:18:36.117909 iOSDemo[377:87235] benchmark mars start
+2017-03-30 15:19:03.036260 iOSDemo[377:87284] benchmark mars total:26918, avg:538, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 15:21:13.304799 iOSDemo[377:87235] benchmark mars start
+2017-03-30 15:21:42.617240 iOSDemo[377:87284] benchmark mars total:29313, avg:586, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 15:22:27.124185 iOSDemo[377:87235] benchmark mars start
+2017-03-30 15:22:54.053847 iOSDemo[377:87284] benchmark mars total:26929, avg:538, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 15:24:48.918459 iOSDemo[377:87235] benchmark afnetworking start
+2017-03-30 15:25:58.488108 iOSDemo[377:87235] benchmark afnetworking total:69570, avg:1391, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 15:26:24.121871 iOSDemo[377:87235] benchmark afnetworking start
+2017-03-30 15:27:32.788998 iOSDemo[377:87235] benchmark afnetworking total:68666, avg:1373, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 15:27:40.127262 iOSDemo[377:87235] benchmark afnetworking start
+2017-03-30 15:28:56.925605 iOSDemo[377:87235] benchmark afnetworking total:76798, avg:1535, suc_rate:1.000000, suc_cnt:50, count:50
+
+64k
+2017-03-30 15:29:47.206556 iOSDemo[377:87235] benchmark afnetworking total:4621, avg:92, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 15:30:06.600541 iOSDemo[377:87235] benchmark afnetworking start
+2017-03-30 15:30:12.178988 iOSDemo[377:87235] benchmark afnetworking total:5577, avg:111, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 15:30:18.853768 iOSDemo[377:87235] benchmark afnetworking start
+2017-03-30 15:30:24.122266 iOSDemo[377:87235] benchmark afnetworking total:5269, avg:105, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 15:30:31.053419 iOSDemo[377:87235] benchmark mars start
+2017-03-30 15:30:33.926513 iOSDemo[377:87284] benchmark mars total:2873, avg:57, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 15:30:38.304774 iOSDemo[377:87235] benchmark mars start
+2017-03-30 15:30:40.791308 iOSDemo[377:87284] benchmark mars total:2487, avg:49, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 15:30:43.569534 iOSDemo[377:87235] benchmark mars start
+2017-03-30 15:30:45.555708 iOSDemo[377:87284] benchmark mars total:1986, avg:39, suc_rate:1.000000, suc:50, cnt:50
+
+128k
+2017-03-30 15:34:01.735079 iOSDemo[377:87235] benchmark afnetworking start
+2017-03-30 15:34:09.014774 iOSDemo[377:87235] benchmark afnetworking total:7279, avg:145, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 16:12:32.797981 iOSDemo[377:87235] benchmark afnetworking start
+2017-03-30 16:12:41.151872 iOSDemo[377:87235] benchmark afnetworking total:8353, avg:167, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 16:12:46.897873 iOSDemo[377:87235] benchmark afnetworking start
+2017-03-30 16:12:56.004894 iOSDemo[377:87235] benchmark afnetworking total:9106, avg:182, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 16:13:06.796445 iOSDemo[377:87235] benchmark mars start
+2017-03-30 16:13:08.569534 iOSDemo[377:87284] benchmark mars total:1773, avg:35, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 16:13:19.263652 iOSDemo[377:87235] benchmark mars start
+2017-03-30 16:13:21.036471 iOSDemo[377:87284] benchmark mars total:1773, avg:35, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 16:13:33.598868 iOSDemo[377:87235] benchmark mars start
+2017-03-30 16:13:36.124695 iOSDemo[377:87284] benchmark mars total:2525, avg:50, suc_rate:1.000000, suc:50, cnt:50
+
+3g 128k
+2017-03-30 16:40:17.253139 iOSDemo[383:99165] benchmark mars start
+2017-03-30 16:41:06.495765 iOSDemo[383:99224] benchmark mars total:49242, avg:984, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 16:41:33.090925 iOSDemo[383:99165] benchmark mars start
+2017-03-30 16:42:00.963378 iOSDemo[383:99224] benchmark mars total:27872, avg:557, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 16:46:08.374298 iOSDemo[383:99165] benchmark mars start
+2017-03-30 16:46:35.299923 iOSDemo[383:99224] benchmark mars total:26925, avg:538, suc_rate:1.000000, suc:50, cnt:50
+2017-03-30 16:43:08.215535 iOSDemo[383:99165] benchmark afnetworking start
+2017-03-30 16:44:54.844776 iOSDemo[383:99165] benchmark afnetworking total:106629, avg:2132, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 16:47:10.064862 iOSDemo[383:99165] benchmark afnetworking start
+2017-03-30 16:48:58.415225 iOSDemo[383:99165] benchmark afnetworking total:108350, avg:2166, suc_rate:1.000000, suc_cnt:50, count:50
+2017-03-30 16:49:55.675384 iOSDemo[383:99165] benchmark afnetworking start
+2017-03-30 16:51:46.921180 iOSDemo[383:99165] benchmark afnetworking total:111246, avg:2224, suc_rate:1.000000, suc_cnt:50, count:50
+
+
+
+
+
+
+
+
+
+
+
+
