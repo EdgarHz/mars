@@ -1,3 +1,6 @@
+发送数据区别不大
+接收数据区别比较大，使用的是自建服务器，对于protobuf协议支持不佳有关。需要更多测试
+
 64k
 2017-03-30 11:16:40.385117 iOSDemo[347:59311] benchmark afnetworking start
 2017-03-30 11:16:42.818122 iOSDemo[347:59311] benchmark afnetworking total:2433, avg:48, suc_rate:1.000000, suc_cnt:50, count:50

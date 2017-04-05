@@ -1,3 +1,10 @@
+
+结论: 5s, 10s, 35s 时区别不大，10s，15s, 20s, 25s, 30s时效果均比较好。
+感觉AFNetworking内部有参数控制，在20s, 25s,30s时其均为35s返回。并不能证明其优越性
+而且如果要保证mars不fail,需要配置其retry_count，如果retry_count为1，则mars超过10s就失败
+
+
+
 5s
 2017-03-29 15:04:37.792628 iOSDemo[3875:2182794] start sensitivity test
 2017-03-29 15:04:42.838636 iOSDemo[3875:2182794] benchmark afnetworking suc:5046.567871
