@@ -28,13 +28,18 @@
 
 #define kSayHello2 2
 
-#define Testing_Data_Size 0
+//-1, 500次测试，短字串
+//0, 50次测试，短字串
+//64, 50次测试，64k字串
+//128, 50次测试，128k字串
+
+
 
 #define USE_Self_Server 0
 #if USE_Self_Server
 
-    #define ServerAddressAndPort @"192.168.1.102:3000" //@"118.89.24.72:8080"
-    #define ServerAddress @"192.168.1.102" //@"118.89.24.72"
+    #define ServerAddressAndPort @"192.168.1.101:3000" //@"118.89.24.72:8080"
+    #define ServerAddress @"192.168.1.101" //@"118.89.24.72"
 #else
     #define ServerAddressAndPort @"118.89.24.72:8080"
     #define ServerAddress @"118.89.24.72"
@@ -99,10 +104,35 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     delete []buff;
     return dump;
 }
+- (BOOL)isRunning {
+    return self.marsRunning || self.afRunning;
+}
++ (instancetype)shared {
+    static BenchMark* gIns = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        gIns = [[BenchMark alloc] init];
+    });
+    return gIns;
+}
+void BenmarkLog(NSString* fmt,...){
+    va_list args;
+    va_start(args, fmt);
+    NSString* f = [[NSString alloc] initWithFormat:[NSString stringWithFormat:@"%@\n", fmt] arguments:args];
+    va_end(args);
+    [[BenchMark shared].logString appendString:f];
+    NSLog(@"%@", f);
+}
 
 -(void) StartAfnetworkingTest {
+    if (self.isRunning) {
+        return;
+    }
+    self.afRunning = YES;
+    self.logString = [NSMutableString string];
+    
     scene = SceneAF;
-    NSLog(@"benchmark afnetworking start");
+    BenmarkLog(@"benchmark afnetworking start");
     
     start_time = [[NSDate date] timeIntervalSince1970] * 1000;
     task_cnt = task_suc = suc_time = 0;
@@ -114,11 +144,18 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
 {
     self = [super init];
     if (self) {
-        if (Testing_Data_Size > 0 ) {
-            self.kbDataString = [self stringWithKbSize:Testing_Data_Size];
-        }
+        self.bytes = 0;
+        self.runtimes = 50;
     }
     return self;
+}
+- (void)setBytes:(int)bytes {
+    _bytes = bytes;
+    if (bytes > 0){
+        self.kbDataString = [self stringWithKbSize:bytes*1024];
+    } else {
+        self.kbDataString = @"Hello world";
+    }
 }
 -(void) doAFNetworking {
     task_time = [[NSDate date] timeIntervalSince1970] * 1000;
@@ -153,33 +190,40 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
         task_suc++;
         suc_time += cost;
         //HelloResponse* resp = [HelloResponse parseFromData:data];
-        //NSLog(@"benchmark afnetworking type:%d suc cost:%llu, cnt:%llu,suc cnt:%llu, ctn:%@, total: %llu", type, (curr - task_time), task_cnt, task_suc, [resp errmsg], (curr - start_time));
+        //BenmarkLog(@"benchmark afnetworking type:%d suc cost:%llu, cnt:%llu,suc cnt:%llu, ctn:%@, total: %llu", type, (curr - task_time), task_cnt, task_suc, [resp errmsg], (curr - start_time));
+    } else {
+        BenmarkLog(@"benchmark afnetworking fail cnt:%llu, cost:%llu", task_cnt, cost);
     }
-    else
-        NSLog(@"benchmark afnetworking fail cnt:%llu, cost:%llu", task_cnt, cost);
     
     if(task_suc!= 0 && (task_suc%50) == 0) {
         UInt64 curr = [[NSDate date] timeIntervalSince1970] * 1000;
-        NSLog(@"benchmark afnetworking total:%llu, avg:%llu, suc_rate:%f, suc_cnt:%llu, count:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc, task_cnt);
-        if (Testing_Data_Size >= 0) {
-            return;
-        }
+        BenmarkLog(@"benchmark afnetworking total:%llu, avg:%llu, suc_rate:%f, suc_cnt:%llu, count:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc, task_cnt);
     }
     
     if(task_suc >= 500) {
         UInt64 curr = [[NSDate date] timeIntervalSince1970] * 1000;
-        NSLog(@"benchmark afnetworking total:%llu, avg:%llu, suc_rate:%f, suc:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc);
+        BenmarkLog(@"benchmark afnetworking total:%llu, avg:%llu, suc_rate:%f, suc:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc);
+    }
+    if (self.runtimes == task_suc) {
+        self.afRunning = NO;
+        if (self.RunStateCallback) {
+            self.RunStateCallback();
+        }
         return;
     }
-    
     [self doAFNetworking];
 }
 
 
 -(void) StartMarsTest {
+    if (self.isRunning) {
+        return;
+    }
+    self.marsRunning = YES;
     scene = SceneMars;
+    self.logString = [NSMutableString string];
     
-    NSLog(@"benchmark mars start");
+    BenmarkLog(@"benchmark mars start");
     start_time = [[NSDate date] timeIntervalSince1970] * 1000;
     task_time = [[NSDate date] timeIntervalSince1970] * 1000;
     task_cnt = task_suc = suc_time = 0;
@@ -190,7 +234,7 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
 - (int)onTaskEnd:(uint32_t)tid errType:(uint32_t)errtype errCode:(uint32_t)errcode {
     UInt64 curr = [[NSDate date] timeIntervalSince1970] * 1000;
     if(scene == SceneSensitivity) {
-        NSLog(@"benchmark mars errtype:%d, errcode:%d, cost:%f", errtype, errcode, ([[NSDate date] timeIntervalSince1970] * 1000 - task_time));
+        BenmarkLog(@"benchmark mars errtype:%d, errcode:%d, cost:%f", errtype, errcode, ([[NSDate date] timeIntervalSince1970] * 1000 - task_time));
         return 0;
     }
     
@@ -199,19 +243,22 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
         task_suc++;
         suc_time += curr - task_time;
         
-        //NSLog(@"benchmark mars suc cost:%llu, cnt:%llu, suc cnt:%llu, total:%llu", (curr - task_time), task_cnt, task_suc, (curr - start_time));
+        //BenmarkLog(@"benchmark mars suc cost:%llu, cnt:%llu, suc cnt:%llu, total:%llu", (curr - task_time), task_cnt, task_suc, (curr - start_time));
     } else {
-        NSLog(@"benchmark mars fail cnt:%llu, cost:%llu, errtype:%d, errcode:%d", task_cnt, (curr-task_time), errtype, errcode);
+        BenmarkLog(@"benchmark mars fail cnt:%llu, cost:%llu, errtype:%d, errcode:%d", task_cnt, (curr-task_time), errtype, errcode);
     }
     
     if((task_suc%50) == 0) {
-        NSLog(@"benchmark mars total:%llu, avg:%llu, suc_rate:%f, suc:%llu, cnt:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc, task_cnt);
-        if (Testing_Data_Size >= 0) {
-            return 0;
-        }
+        BenmarkLog(@"benchmark mars total:%llu, avg:%llu, suc_rate:%f, suc:%llu, cnt:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc, task_cnt);
     }
     if(task_suc >= 500) {
-        NSLog(@"benchmark mars final total:%llu, avg:%llu, suc_rate:%f, suc:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc);
+        BenmarkLog(@"benchmark mars final total:%llu, avg:%llu, suc_rate:%f, suc:%llu", (curr - start_time), (suc_time)/task_suc, task_suc/(double)task_cnt, task_suc);
+    }
+    if (self.runtimes == task_suc) {
+        self.marsRunning = NO;
+        if (self.RunStateCallback) {
+            self.RunStateCallback();
+        }
         return 0;
     }
     
@@ -238,7 +285,7 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
     for (; n < kb;i++){
         [string appendFormat:@"%@",string];
         n = pow(2,i);
-        NSLog(@"%d %d",i,n);
+        BenmarkLog(@"%d %d",i,n);
     }
 
     return string;
@@ -246,11 +293,8 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
 -(NSData*)requestSendDataWithUser:(NSString*)user {
     HelloRequest *helloRequest = [HelloRequest new];
     helloRequest.user = user;
-    if (Testing_Data_Size <= 0){
-        helloRequest.text = @"Hello world";
-    } else {
-        helloRequest.text = self.kbDataString;
-    }
+    helloRequest.text = self.kbDataString;
+    
     //Benchmark scene: 64KB,128KB request test
     //HelloRequest* helloRequest = [[[[[HelloRequest builder] setUser:@"mars"] setText:@"Hello mars!"] setDumpContent:[self makeDumpData:128*1024]] build];
     NSData* data = [helloRequest data];
@@ -272,7 +316,13 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
  * step 3: compare the cgi result
  */
 -(void) StartSensitivityTest {
-    NSLog(@"start sensitivity test");
+    if (self.isRunning) {
+        return;
+    }
+    self.marsRunning = YES;
+    self.afRunning = YES;
+    self.logString = [NSMutableString string];
+    BenmarkLog(@"start sensitivity test");
     scene = SceneSensitivity;
     
     UInt64 time = [[NSDate date] timeIntervalSince1970] * 1000;
@@ -284,9 +334,9 @@ typedef NS_ENUM(NSInteger, BenchMarkScene) {
 
     NSString* url = [NSString stringWithFormat:@"http://%@/mars/hello2", ServerAddressAndPort];
     [manager POST:url parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSLog(@"benchmark afnetworking suc:%f", ([[NSDate date] timeIntervalSince1970] * 1000 - time));
+        BenmarkLog(@"benchmark afnetworking suc:%f", ([[NSDate date] timeIntervalSince1970] * 1000 - time));
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"benchmark afnetworking fail:%f", ([[NSDate date] timeIntervalSince1970] * 1000 - time));
+        BenmarkLog(@"benchmark afnetworking fail:%f", ([[NSDate date] timeIntervalSince1970] * 1000 - time));
     }];
     
     task_time = [[NSDate date] timeIntervalSince1970] * 1000;

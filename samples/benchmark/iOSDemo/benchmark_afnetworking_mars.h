@@ -23,7 +23,15 @@
 
 @interface BenchMark : NSObject<UINotifyDelegate> {
 }
+@property(nonatomic, assign) int runtimes;
+@property(nonatomic, assign) int bytes;
+@property(nonatomic, assign, readonly) BOOL isRunning;
+@property(nonatomic, assign) BOOL afRunning;
+@property(nonatomic, assign) BOOL marsRunning;
+@property(nonatomic, copy) void (^RunStateCallback)();
+@property(nonatomic, strong) NSMutableString* logString;
 
++ (instancetype)shared;
 -(void) StartAfnetworkingTest;
 -(void) StartMarsTest;
 -(void) StartSensitivityTest;
