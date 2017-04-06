@@ -35,7 +35,7 @@
 
 
 
-#define USE_Self_Server 0
+#define USE_Self_Server 1
 #if USE_Self_Server
 
     #define ServerAddressAndPort @"192.168.1.101:3000" //@"118.89.24.72:8080"
@@ -189,7 +189,9 @@ void BenmarkLog(NSString* fmt,...){
     if(bOK) {
         task_suc++;
         suc_time += cost;
-        //HelloResponse* resp = [HelloResponse parseFromData:data];
+        NSError* err = nil;
+        HelloResponse* resp = [HelloResponse parseFromData:data error:&err];
+        int i = 0;
         //BenmarkLog(@"benchmark afnetworking type:%d suc cost:%llu, cnt:%llu,suc cnt:%llu, ctn:%@, total: %llu", type, (curr - task_time), task_cnt, task_suc, [resp errmsg], (curr - start_time));
     } else {
         BenmarkLog(@"benchmark afnetworking fail cnt:%llu, cost:%llu", task_cnt, cost);
@@ -305,8 +307,9 @@ void BenmarkLog(NSString* fmt,...){
 }
 
 -(int)onPostDecode:(NSData*)responseData {
-    //HelloResponse* helloResponse = [HelloResponse parseFromData:responseData];
-    return 0;
+    NSError* err = nil;
+    HelloResponse* helloResponse = [HelloResponse parseFromData:responseData error:&err];
+    return err ? -1: 0;
 }
 
 /*
